@@ -121,6 +121,9 @@ create table public.runs (
   )),
   -- inline = chunked routine runs; batch = one run-batch upload
   mode text check (mode in ('inline', 'batch')),
+  -- captured at run start: env can change later (spec §5.4)
+  clay_routine_id text,
+  chunk_size integer not null default 100,
 
   run_name text not null,
   file_name text not null,
@@ -235,6 +238,10 @@ create table public.run_rows (
   status text not null default 'pending' check (status in (
     'pending', 'written', 'failed', 'skipped'
   )),
+  -- the Routine's own status verbatim (added | already_member |
+  -- enriched_only | skipped_duplicate | failed — spec §3.2), preserved
+  -- alongside the app-level rollup above
+  routine_status text,
   failure_reason text,                   -- human sentence ("Bad email", …)
   salesforce_url text,
   payload jsonb,                         -- raw routine output for the row
