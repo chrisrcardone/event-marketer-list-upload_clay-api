@@ -49,3 +49,6 @@ next-env.d.ts
 # committed Inter Tight (OFL) when they're absent.
 public/fonts/roobert/
 design/prototype/**/fonts/Roobert*.ttf
+
+# local e2e scratch
+.e2e-tmp.mjs
