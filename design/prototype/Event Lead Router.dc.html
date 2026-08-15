@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/terra-brand-design-system-83726c77-ce42-477c-9457-ac22eb734abe/colors_and_type.css">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" rel="stylesheet">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" rel="stylesheet">
+  <script src="_ds/terra-brand-design-system-83726c77-ce42-477c-9457-ac22eb734abe/_ds_bundle.js"></script>
+  <style>
+    body{margin:0;background:#FEFDFB;color:#1B1A18;font-family:var(--font-body);}
+    a{color:#1B1A18;text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    button{font-family:inherit;}
+    button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid #FF7714;outline-offset:2px;border-radius:4px;}
+    @keyframes rowIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+    @keyframes chunkPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+    @keyframes dotBlink{0%,100%{opacity:1;}50%{opacity:.25;}}
+    ::selection{background:#FCC9AB;}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;background:#FEFDFB;">
+
+  <!-- ══ TOP BAR ══ -->
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+    <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:20px;height:60px;padding:0 24px;background:rgba(254,253,251,.86);backdrop-filter:blur(12px);border-bottom:1px solid #EDEBE8;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="assets/Clay_Arch_3D.png" alt="Clay" style="width:24px;height:24px;object-fit:contain;">
+        <span style="font-family:var(--font-display);font-weight:500;font-size:16px;letter-spacing:-0.01em;">Event Lead Router</span>
+        <span style="font-family:var(--font-mono);font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px 3px;border-radius:999px;background:#F4F3F0;color:#7B7974;border:1px solid #E6E8EC;">Demo</span>
+      </div>
+      <nav style="display:flex;align-items:center;gap:4px;margin-left:8px;" aria-label="Primary">
+        <button onClick="{{ goHistory }}" style="border:0;background:{{ navHistBg }};color:#1B1A18;font-size:13.5px;font-weight:500;font-family:var(--font-display);padding:7px 14px;border-radius:999px;cursor:pointer;" style-hover="background:#F4F3F0;">Run history</button>
+        <button onClick="{{ goNewrun }}" style="border:0;background:{{ navNewBg }};color:#1B1A18;font-size:13.5px;font-weight:500;font-family:var(--font-display);padding:7px 14px;border-radius:999px;cursor:pointer;" style-hover="background:#F4F3F0;">New run</button>
+      </nav>
+      <div style="flex:1;"></div>
+      <button onClick="{{ goNewrun }}" style="border:0;background:#1B1A18;color:#FEFDFB;font-family:var(--font-display);font-weight:500;font-size:13.5px;letter-spacing:-0.01em;padding:9px 18px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;" style-hover="opacity:.9;"><i class="ph ph-plus" aria-hidden="true"></i>New run</button>
+      <div aria-label="Signed in as Jordan Bell" title="jordan.bell@clay.com" style="width:32px;height:32px;border-radius:10px;background:#F4F3F0;border:1px solid #EDEBE8;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:11px;color:#7B7974;">JB</div>
+    </header>
+  </sc-if>
+
+  <!-- ══ SIGN IN ══ -->
+  <sc-if value="{{ isSignin }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Sign in" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+      <div style="width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;">
+        <img src="assets/Clay_Logo_3D_Blk.png" alt="Clay" style="height:44px;object-fit:contain;margin-bottom:36px;">
+        <div class="t-eyebrow-sm" style="margin-bottom:14px;">Internal tool</div>
+        <h1 style="font-family:var(--font-display);font-weight:525;font-size:40px;line-height:1.02;letter-spacing:-0.03em;margin:0 0 14px;">Event Lead Router</h1>
+        <p style="font-size:16px;line-height:1.5;color:#7B7974;margin:0 0 36px;max-width:320px;text-wrap:pretty;">Badge scans in. Enriched, deduped leads in your Salesforce campaign — with a number you can stand behind.</p>
+        <button onClick="{{ signIn }}" style="display:inline-flex;align-items:center;gap:12px;border:1px solid #D1CDC7;background:#FFFFFF;border-radius:999px;padding:13px 26px;font-family:var(--font-display);font-weight:500;font-size:15.5px;cursor:pointer;color:#1B1A18;" style-hover="background:#F4F3F0;">
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+        <p style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin:22px 0 0;">clay.com accounts only</p>
+        <p style="font-size:12.5px;color:#7B7974;margin:14px 0 0;max-width:320px;text-wrap:pretty;">This is a demo built to show what a Clay-powered workflow can do — not an official Clay internal tool.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ══ REJECTED DOMAIN ══ -->
+  <sc-if value="{{ isRejected }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Rejected domain" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+      <div style="width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+        <img src="assets/Clay_Logo_3D_Blk.png" alt="Clay" style="height:44px;object-fit:contain;margin-bottom:36px;">
+        <div style="background:#FFFFFF;border:1px solid #EDEBE8;border-radius:20px;padding:40px 36px;display:flex;flex-direction:column;align-items:center;gap:0;">
+          <div style="width:44px;height:44px;border-radius:14px;background:#F4F3F0;display:flex;align-items:center;justify-content:center;margin-bottom:20px;"><i class="ph ph-hand-palm" style="font-size:22px;color:#7B7974;" aria-hidden="true"></i></div>
+          <h1 style="font-family:var(--font-display);font-weight:525;font-size:26px;line-height:1.1;letter-spacing:-0.02em;margin:0 0 12px;">That account won't work here</h1>
+          <p style="font-size:14.5px;line-height:1.55;color:#7B7974;margin:0 0 8px;text-wrap:pretty;">You signed in as <span style="color:#1B1A18;font-weight:500;">maya.k.events@gmail.com</span>. Event Lead Router is limited to <span style="color:#1B1A18;font-weight:500;">@clay.com</span> Google accounts.</p>
+          <p style="font-size:14.5px;line-height:1.55;color:#7B7974;margin:0 0 26px;">Nothing's broken — it's just the guest list.</p>
+          <button onClick="{{ goSignin }}" style="border:0;background:#1B1A18;color:#FEFDFB;font-family:var(--font-display);font-weight:500;font-size:14.5px;padding:11px 22px;border-radius:999px;cursor:pointer;" style-hover="opacity:.9;">Use a different account</button>
+        </div>
+        <p style="font-size:12.5px;color:#7B7974;margin:18px 0 0;">Think you should have access? Ask in #gtm-engineering.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ══ NEW RUN ══ -->
+  <sc-if value="{{ isNewrun }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="New run" style="max-width:1020px;margin:0 auto;padding:36px 24px 150px;">
+      <div class="t-eyebrow-sm" style="margin-bottom:10px;">New run</div>
+      <h1 style="font-family:var(--font-display);font-weight:525;font-size:32px;letter-spacing:-0.025em;line-height:1;margin:0 0 30px;">Upload scans, pick a campaign, go</h1>
+
+      <!-- UPLOAD -->
+      <section aria-label="Upload" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;padding:26px 28px;margin-bottom:20px;">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:18px;">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:-0.015em;margin:0;">Upload</h2>
+          <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;font-weight:500;">CSV · up to 50,000 rows</span>
+        </div>
+
+        <sc-if value="{{ nrEmpty }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ loadFile }}" aria-label="Upload a CSV — drop a file or click to browse" style="width:100%;box-sizing:border-box;border:1.5px dashed #D1CDC7;background:#FEFDFB;border-radius:14px;padding:52px 24px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;" style-hover="border-color:#FF7714;background:#FFF9F5;">
+            <img src="assets/List-Building.png" alt="" style="width:72px;height:72px;object-fit:contain;">
+            <span style="font-family:var(--font-display);font-weight:500;font-size:16px;color:#1B1A18;">Drop your badge-scan CSV here</span>
+            <span style="font-size:13px;color:#7B7974;">or click to browse — parsing happens on your machine, instantly</span>
+          </button>
+        </sc-if>
+
+        <sc-if value="{{ nrLoaded }}" hint-placeholder-val="{{ true }}">
+          <!-- file summary -->
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#F4F3F0;border-radius:12px;padding:14px 18px;margin-bottom:20px;">
+            <i class="ph ph-file-csv" style="font-size:22px;color:#1B1A18;" aria-hidden="true"></i>
+            <span style="font-family:var(--font-mono);font-weight:500;font-size:13.5px;">{{ fileName }}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:#7B7974;">{{ fileMeta }}</span>
+            <div style="flex:1;"></div>
+            <button onClick="{{ removeFile }}" style="border:0;background:transparent;color:#7B7974;font-size:12.5px;cursor:pointer;padding:4px 8px;font-family:var(--font-body);" style-hover="color:#1B1A18;text-decoration:underline;">Remove</button>
+          </div>
+
+          <sc-if value="{{ nrBig }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #FBE189;background:#FEFAE8;border-radius:12px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;">
+              <i class="ph ph-scissors" style="font-size:20px;color:#9E5802;margin-top:1px;" aria-hidden="true"></i>
+              <div>
+                <div style="font-weight:500;font-size:14.5px;margin-bottom:4px;color:#372201;">This file is over the 50,000-row limit for one run</div>
+                <p style="font-size:13.5px;line-height:1.55;color:#9E5802;margin:0;text-wrap:pretty;">52,318 rows won't fit in a single batch. Split the file in two and run them back to back — both runs can write to the same campaign, and dedupe still works across them.</p>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ nrNormal }}" hint-placeholder-val="{{ true }}">
+            <!-- preview -->
+            <div style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-bottom:8px;">First 5 rows, as parsed</div>
+            <div style="border:1px solid #EDEBE8;border-radius:12px;overflow-x:auto;margin-bottom:24px;">
+              <table style="border-collapse:collapse;width:100%;min-width:660px;font-size:12.5px;">
+                <thead><tr>
+                  <sc-for list="{{ prevCols }}" as="c" hint-placeholder-count="6"><th style="text-align:left;padding:9px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;white-space:nowrap;">{{ c }}</th></sc-for>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ prevRows }}" as="r" hint-placeholder-count="5">
+                    <tr style="border-top:1px solid #EFF1F3;">
+                      <td style="padding:8px 14px;font-family:var(--font-mono);color:#1B1A18;white-space:nowrap;">{{ r.a }}</td>
+                      <td style="padding:8px 14px;font-family:var(--font-mono);white-space:nowrap;">{{ r.b }}</td>
+                      <td style="padding:8px 14px;font-family:var(--font-mono);white-space:nowrap;">{{ r.c }}</td>
+                      <td style="padding:8px 14px;font-family:var(--font-mono);white-space:nowrap;">{{ r.d }}</td>
+                      <td style="padding:8px 14px;font-family:var(--font-mono);white-space:nowrap;">{{ r.e }}</td>
+                      <td style="padding:8px 14px;font-family:var(--font-mono);color:#7B7974;white-space:nowrap;">{{ r.f }}</td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- mapping -->
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px;">
+              <div style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">Column mapping</div>
+              <span style="font-size:12.5px;color:#7B7974;">Auto-mapped from your headers — check the sample values. Each row needs one identity: an email, a name + company, or a LinkedIn URL.</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:26px;">
+              <sc-for list="{{ mappings }}" as="m" hint-placeholder-count="7">
+                <div style="border:1px solid #EDEBE8;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:#FEFDFB;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#1B1A18;">{{ m.field }}</span>
+                    <span style="font-family:var(--font-mono);font-weight:500;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:{{ m.tagFg }};">{{ m.tag }}</span>
+                  </div>
+                  <select aria-label="{{ m.aria }}" defaultValue="{{ m.value }}" style="border:1px solid #E6E8EC;border-radius:9px;padding:8px 10px;font-size:13px;font-family:var(--font-body);background:#FFFFFF;color:#1B1A18;width:100%;box-sizing:border-box;cursor:pointer;">
+                    <sc-for list="{{ sourceCols }}" as="o" hint-placeholder-count="4"><option>{{ o }}</option></sc-for>
+                  </select>
+                  <div style="font-family:var(--font-mono);font-size:11.5px;color:#7B7974;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Row 1 · {{ m.sample }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- pre-flight quality -->
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px;">
+              <div style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">Before it costs you credits</div>
+            </div>
+            <div style="border:1px solid #EDEBE8;border-radius:12px;overflow:hidden;margin-bottom:14px;">
+              <sc-for list="{{ quality }}" as="q" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:{{ q.bt }};flex-wrap:wrap;">
+                  <span style="font-family:var(--font-mono);font-weight:600;font-size:16px;min-width:28px;color:{{ q.numFg }};font-variant-numeric:tabular-nums;">{{ q.count }}</span>
+                  <div style="flex:1;min-width:200px;">
+                    <div style="font-size:14px;font-weight:500;">{{ q.label }}</div>
+                    <div style="font-size:12.5px;color:#7B7974;">{{ q.desc }}</div>
+                  </div>
+                  <div role="group" aria-label="{{ q.aria }}" style="display:flex;background:#F4F3F0;border-radius:999px;padding:3px;">
+                    <button onClick="{{ q.setDrop }}" style="border:0;border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:500;font-family:var(--font-display);cursor:pointer;background:{{ q.dropBg }};color:{{ q.dropFg }};">Drop</button>
+                    <button onClick="{{ q.setKeep }}" style="border:0;border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:500;font-family:var(--font-display);cursor:pointer;background:{{ q.keepBg }};color:{{ q.keepFg }};">Keep</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:flex-end;">
+              <span style="font-family:var(--font-mono);font-weight:500;font-size:12.5px;color:#1B1A18;font-variant-numeric:tabular-nums;">Running {{ effRows }} of 412 rows · {{ droppedRows }} dropped before upload</span>
+            </div>
+          </sc-if>
+        </sc-if>
+      </section>
+
+      <!-- CAMPAIGN -->
+      <section aria-label="Campaign" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;padding:26px 28px;margin-bottom:20px;">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:16px;">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:-0.015em;margin:0;">Campaign</h2>
+          <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;font-weight:500;">Search a name or paste a Salesforce ID</span>
+        </div>
+        <div style="max-width:560px;">
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid #E6E8EC;border-radius:11px;padding:11px 14px;background:#FFFFFF;margin-bottom:14px;">
+            <i class="ph ph-magnifying-glass" style="color:#7B7974;font-size:16px;" aria-hidden="true"></i>
+            <input role="combobox" aria-label="Campaign name or Salesforce ID" aria-expanded="{{ nrMulti }}" defaultValue="{{ campQuery }}" style="border:0;outline:0;flex:1;font-size:14px;font-family:var(--font-body);background:transparent;color:#1B1A18;">
+            <sc-if value="{{ nrNormal }}" hint-placeholder-val="{{ true }}"><span style="font-family:var(--font-mono);font-weight:600;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#102B03;background:#EEF773;padding:5px 9px 4px;border-radius:999px;">Found</span></sc-if>
+          </div>
+
+          <sc-if value="{{ nrMulti }}" hint-placeholder-val="{{ false }}">
+            <div role="listbox" aria-label="4 campaigns match" style="border:1px solid #E6E8EC;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);">
+              <div style="padding:10px 16px;background:#F4F3F0;font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">4 campaigns match “sxsw” — pick one</div>
+              <sc-for list="{{ campMatches }}" as="cm" hint-placeholder-count="4">
+                <div role="option" tabIndex="{{ zero }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid #EFF1F3;cursor:pointer;background:{{ cm.bg }};flex-wrap:wrap;" style-hover="background:#F4F3F0;">
+                  <div style="flex:1;min-width:180px;">
+                    <div style="font-size:14px;font-weight:500;">{{ cm.name }}</div>
+                    <div style="font-family:var(--font-mono);font-size:11.5px;color:#7B7974;">{{ cm.meta }}</div>
+                  </div>
+                  <span style="font-family:var(--font-mono);font-weight:600;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px 4px;border-radius:999px;background:{{ cm.stBg }};color:{{ cm.stFg }};">{{ cm.status }}</span>
+                  <span style="font-family:var(--font-mono);font-size:11.5px;color:#7B7974;font-variant-numeric:tabular-nums;">{{ cm.members }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ nrNormal }}" hint-placeholder-val="{{ true }}">
+            <div style="border:1px solid #E6E8EC;border-radius:14px;padding:20px 22px;background:#FEFDFB;">
+              <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:220px;">
+                  <div style="font-family:var(--font-display);font-weight:500;font-size:17px;letter-spacing:-0.01em;margin-bottom:6px;">SXSW 2026 — Booth Leads</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+                    <span style="font-family:var(--font-mono);font-weight:600;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px 4px;border-radius:999px;background:#F4F3F0;color:#1B1A18;">Conference</span>
+                    <span style="font-family:var(--font-mono);font-weight:600;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px 4px;border-radius:999px;background:#EEF773;color:#102B03;">Active</span>
+                  </div>
+                  <div style="display:flex;gap:22px;flex-wrap:wrap;">
+                    <div><div style="font-family:var(--font-mono);font-weight:500;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-bottom:3px;">Members today</div><div style="font-family:var(--font-mono);font-size:13px;font-variant-numeric:tabular-nums;">1,204</div></div>
+                    <div><div style="font-family:var(--font-mono);font-weight:500;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-bottom:3px;">Record</div><a href="#sf" style="font-family:var(--font-mono);font-size:13px;color:#B53D0A;">701Kd…HcQAJ <i class="ph ph-arrow-square-out" style="font-size:11px;" aria-hidden="true"></i></a></div>
+                  </div>
+                </div>
+                <i class="ph ph-check-circle" style="font-size:22px;color:#808000;" aria-hidden="true"></i>
+              </div>
+              <p style="font-size:12.5px;color:#7B7974;margin:14px 0 0;border-top:1px solid #EFF1F3;padding-top:12px;text-wrap:pretty;">This is where {{ effRows }} people will land. Validated against Salesforce just now — if it's the wrong campaign, now's the moment.</p>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+
+      <!-- REVIEW & RUN — sticky -->
+      <div style="position:sticky;bottom:78px;z-index:30;">
+        <section aria-label="Review and run" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;padding:16px 22px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <span style="font-family:var(--font-mono);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;">{{ reviewRows }}</span>
+            <i class="ph ph-arrow-right" style="color:#7B7974;font-size:14px;" aria-hidden="true"></i>
+            <span style="font-size:14px;font-weight:500;">SXSW 2026 — Booth Leads</span>
+          </div>
+          <div style="flex:1;"></div>
+          <span style="font-family:var(--font-mono);font-size:12px;color:#7B7974;font-variant-numeric:tabular-nums;">{{ reviewCost }}</span>
+          <sc-if value="{{ startBlocked }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:12.5px;color:#B53D0A;font-weight:500;">{{ startReason }}</span>
+          </sc-if>
+          <button onClick="{{ startRun }}" disabled="{{ startBlocked }}" style="border:0;background:#FF7714;color:#381005;font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:-0.01em;padding:12px 26px;border-radius:999px;cursor:pointer;opacity:{{ startOpacity }};display:inline-flex;align-items:center;gap:8px;" style-hover="background:#f06c0d;">Start run<i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+        </section>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- ══ RUN MONITOR ══ -->
+  <sc-if value="{{ isMonitor }}" hint-placeholder-val="{{ true }}">
+    <main data-screen-label="Run monitor" style="max-width:1020px;margin:0 auto;padding:28px 24px 130px;">
+
+      <!-- header -->
+      <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:8px;">
+        <div style="flex:1;min-width:260px;">
+          <button onClick="{{ goHistory }}" style="border:0;background:transparent;padding:0;color:#7B7974;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-bottom:10px;font-family:var(--font-body);" style-hover="color:#1B1A18;"><i class="ph ph-arrow-left" aria-hidden="true"></i>Run history</button>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <h1 style="font-family:var(--font-display);font-weight:525;font-size:28px;letter-spacing:-0.02em;line-height:1;margin:0;">{{ runName }}</h1>
+            <span role="status" style="font-family:var(--font-mono);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px 5px;border-radius:999px;background:{{ pillBg }};color:{{ pillFg }};display:inline-flex;align-items:center;gap:7px;"><span style="width:6px;height:6px;border-radius:50%;background:{{ pillDot }};animation:{{ pillAnim }};"></span>{{ pillLabel }}</span>
+          </div>
+          <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-family:var(--font-mono);font-size:12px;color:#7B7974;">
+            <span><i class="ph ph-file-csv" aria-hidden="true"></i> {{ runFile }}</span>
+            <a href="#sf" style="color:#B53D0A;">SXSW 2026 — Booth Leads <i class="ph ph-arrow-square-out" style="font-size:11px;" aria-hidden="true"></i></a>
+            <span>Started {{ startedAt }}</span>
+            <span style="font-variant-numeric:tabular-nums;">Elapsed {{ elapsedText }}</span>
+          </div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <button onClick="{{ refreshNow }}" style="border:1px solid #E6E8EC;background:#FFFFFF;border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:500;font-family:var(--font-display);cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#1B1A18;" style-hover="background:#F4F3F0;"><i class="ph ph-arrows-clockwise" aria-hidden="true"></i>Refresh</button>
+          <span style="font-family:var(--font-mono);font-size:11px;color:{{ updatedFg }};font-variant-numeric:tabular-nums;">Updated {{ updatedText }}</span>
+        </div>
+      </div>
+
+      <!-- live region -->
+      <div aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">{{ announce }}</div>
+
+      <!-- banners -->
+      <sc-if value="{{ isStalled }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid #FBE189;background:#FEFAE8;border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 0;">
+          <i class="ph ph-hourglass-medium" style="font-size:20px;color:#9E5802;" aria-hidden="true"></i>
+          <div style="flex:1;min-width:240px;">
+            <div style="font-weight:500;font-size:14px;color:#372201;">Nothing has moved for 4 minutes</div>
+            <div style="font-size:13px;color:#9E5802;text-wrap:pretty;">{{ stalledDetail }} Retrying won't touch the rows already written.</div>
+          </div>
+          <button onClick="{{ retryStuck }}" style="border:0;background:#1B1A18;color:#FEFDFB;font-family:var(--font-display);font-weight:500;font-size:13.5px;padding:10px 18px;border-radius:999px;cursor:pointer;" style-hover="opacity:.9;">Retry stuck chunks</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isRateltd }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid #BEDFFE;background:#F0F8FF;border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 0;">
+          <i class="ph ph-traffic-cone" style="font-size:20px;color:#395AFA;" aria-hidden="true"></i>
+          <div style="flex:1;min-width:240px;">
+            <div style="font-weight:500;font-size:14px;color:#001433;">Clay asked us to slow down</div>
+            <div style="font-size:13px;color:#395AFA;text-wrap:pretty;">Rate limited — the run pauses and resumes on its own. Nothing is lost.</div>
+          </div>
+          <span style="font-family:var(--font-mono);font-weight:600;font-size:12px;color:#001433;font-variant-numeric:tabular-nums;">Resuming in {{ retryIn }}s</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid #D1CDC7;background:#F4F3F0;border-radius:14px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:16px 0 0;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#FB4450;animation:dotBlink 1.2s infinite;"></span>
+          <div style="flex:1;min-width:240px;">
+            <div style="font-weight:500;font-size:14px;">Connection lost — retrying</div>
+            <div style="font-size:13px;color:#7B7974;">The numbers below are from {{ updatedText }}. The run itself keeps going on Clay's side.</div>
+          </div>
+          <button onClick="{{ refreshNow }}" style="border:1px solid #D1CDC7;background:#FFFFFF;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:500;font-family:var(--font-display);cursor:pointer;color:#1B1A18;" style-hover="background:#F4F3F0;">Try now</button>
+        </div>
+      </sc-if>
+
+      <!-- PRIMARY PROGRESS / TERMINAL SUMMARY -->
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Progress" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:20px;padding:30px 32px 26px;margin-top:18px;">
+          <div style="display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:baseline;gap:14px;">
+              <span aria-hidden="true" style="font-family:var(--font-display);font-weight:525;font-size:clamp(64px,9vw,104px);line-height:.9;letter-spacing:-0.04em;font-variant-numeric:tabular-nums;font-feature-settings:'tnum' on;color:#1B1A18;">{{ pctInt }}</span>
+              <span aria-hidden="true" style="font-family:var(--font-display);font-weight:500;font-size:30px;color:#7B7974;">%</span>
+            </div>
+            <div style="padding-bottom:10px;">
+              <div style="font-family:var(--font-mono);font-weight:500;font-size:14px;font-variant-numeric:tabular-nums;color:#1B1A18;">{{ processedText }}</div>
+              <div style="font-family:var(--font-mono);font-size:12px;color:#7B7974;margin-top:4px;">{{ phaseHint }}</div>
+            </div>
+            <div style="flex:1;"></div>
+            <div style="display:flex;gap:28px;padding-bottom:10px;">
+              <sc-if value="{{ hasRate }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:right;"><div style="font-family:var(--font-mono);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;">{{ rateText }}</div><div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-top:2px;">rows / min</div></div>
+              </sc-if>
+              <sc-if value="{{ hasEta }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:right;"><div style="font-family:var(--font-mono);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;">{{ etaText }}</div><div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-top:2px;">time left</div></div>
+              </sc-if>
+            </div>
+          </div>
+          <div role="progressbar" aria-valuenow="{{ pctInt }}" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress" style="height:10px;border-radius:999px;background:#F4F3F0;margin-top:22px;overflow:hidden;">
+            <div style="height:100%;width:{{ pctW }};background:#FF7714;border-radius:999px;transition:width .35s cubic-bezier(.2,0,0,1);"></div>
+          </div>
+
+          <!-- chunk track -->
+          <div style="margin-top:20px;">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap;">
+              <span style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">Chunks · 100 rows each</span>
+              <span style="font-family:var(--font-mono);font-size:11px;color:#7B7974;font-variant-numeric:tabular-nums;">{{ chunkSummary }}</span>
+            </div>
+            <sc-if value="{{ chunksDiscrete }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px;">
+                <sc-for list="{{ chunks }}" as="c" hint-placeholder-count="4">
+                  <div title="{{ c.title }}" style="flex:1;height:46px;border-radius:10px;background:{{ c.bg }};border:1px solid {{ c.bd }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;animation:{{ c.anim }};transition:background .3s;">
+                    <span style="font-family:var(--font-mono);font-weight:600;font-size:11px;color:{{ c.fg }};font-variant-numeric:tabular-nums;">{{ c.label }}</span>
+                    <span style="font-family:var(--font-mono);font-size:10px;color:{{ c.fg }};opacity:.7;font-variant-numeric:tabular-nums;">{{ c.sub }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ chunksDense }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:2px;">
+                <sc-for list="{{ chunks }}" as="c" hint-placeholder-count="20">
+                  <div title="{{ c.title }}" style="flex:1;height:16px;border-radius:3px;background:{{ c.bg }};border:1px solid {{ c.bd }};animation:{{ c.anim }};"></div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Run summary" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:20px;padding:30px 32px;margin-top:18px;">
+          <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
+            <img src="assets/Check-A.png" alt="" style="width:84px;height:84px;object-fit:contain;">
+            <div style="flex:1;min-width:240px;">
+              <div style="display:flex;align-items:baseline;gap:12px;">
+                <span style="font-family:var(--font-display);font-weight:525;font-size:clamp(52px,7vw,80px);line-height:.9;letter-spacing:-0.04em;font-variant-numeric:tabular-nums;">{{ finalRate }}</span>
+                <span style="font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">success rate</span>
+              </div>
+              <p style="font-size:15px;color:#1B1A18;margin:12px 0 0;text-wrap:pretty;">{{ finalLine }}</p>
+              <p style="font-family:var(--font-mono);font-size:12px;color:#7B7974;margin:6px 0 0;font-variant-numeric:tabular-nums;">{{ finalMeta }}</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:9px;align-items:stretch;min-width:230px;">
+              <sc-if value="{{ hasFails }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ retryFailed }}" style="border:0;background:#FF7714;color:#381005;font-family:var(--font-display);font-weight:500;font-size:14.5px;padding:12px 20px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;" style-hover="background:#f06c0d;"><i class="ph-bold ph-arrow-counter-clockwise" aria-hidden="true"></i>Retry {{ failCount }} failed rows</button>
+              </sc-if>
+              <button onClick="{{ exportFull }}" style="border:1px solid #D1CDC7;background:#FFFFFF;color:#1B1A18;font-family:var(--font-display);font-weight:500;font-size:14px;padding:11px 20px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;" style-hover="background:#F4F3F0;"><i class="ph ph-download-simple" aria-hidden="true"></i>Export results CSV</button>
+              <div style="display:flex;gap:9px;">
+                <sc-if value="{{ hasFails }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ exportFails }}" style="flex:1;border:1px solid #D1CDC7;background:#FFFFFF;color:#1B1A18;font-family:var(--font-display);font-weight:500;font-size:13px;padding:10px 14px;border-radius:999px;cursor:pointer;" style-hover="background:#F4F3F0;">Failures only</button>
+                </sc-if>
+                <button onClick="{{ runAnother }}" style="flex:1;border:1px solid #D1CDC7;background:#FFFFFF;color:#1B1A18;font-family:var(--font-display);font-weight:500;font-size:13px;padding:10px 14px;border-radius:999px;cursor:pointer;" style-hover="background:#F4F3F0;">Run another</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <!-- STAT TILES -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px;">
+        <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="5">
+          <div style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:14px;padding:16px 18px;">
+            <div style="font-family:var(--font-mono);font-weight:500;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-bottom:8px;">{{ t.label }}</div>
+            <div style="font-family:var(--font-mono);font-weight:600;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;color:{{ t.fg }};">{{ t.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- FAILURE ROLL-UP -->
+      <sc-if value="{{ hasFailGroups }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;">
+          <span style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;margin-right:2px;">Failures by cause</span>
+          <sc-for list="{{ failGroups }}" as="g" hint-placeholder-count="3">
+            <span style="font-family:var(--font-mono);font-weight:500;font-size:12px;padding:7px 12px;border-radius:999px;background:#FFF1F2;color:#C22E3D;display:inline-flex;align-items:center;gap:7px;"><span style="font-weight:600;font-variant-numeric:tabular-nums;">{{ g.count }}</span>{{ g.label }}</span>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- RESULTS TABLE -->
+      <section aria-label="Results" style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;margin-top:16px;overflow:hidden;">
+        <div style="display:flex;align-items:baseline;gap:10px;padding:16px 20px 12px;flex-wrap:wrap;">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:16px;letter-spacing:-0.01em;margin:0;">Results</h2>
+          <span style="font-family:var(--font-mono);font-size:11.5px;color:#7B7974;font-variant-numeric:tabular-nums;">{{ tableNote }}</span>
+        </div>
+        <div style="max-height:460px;overflow:auto;">
+          <table style="border-collapse:separate;border-spacing:0;width:100%;min-width:760px;font-size:13px;">
+            <thead>
+              <tr>
+                <th style="position:sticky;top:0;left:0;z-index:3;text-align:left;padding:9px 20px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Name</th>
+                <th style="position:sticky;top:0;z-index:2;text-align:left;padding:9px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Email</th>
+                <th style="position:sticky;top:0;z-index:2;text-align:left;padding:9px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Phone</th>
+                <th style="position:sticky;top:0;z-index:2;text-align:left;padding:9px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Status</th>
+                <th style="position:sticky;top:0;z-index:2;text-align:left;padding:9px 20px 9px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Salesforce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-if value="{{ tableEmpty }}" hint-placeholder-val="{{ false }}">
+                <tr><td colSpan="5" style="padding:34px 20px;">
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="height:12px;border-radius:6px;background:#F4F3F0;width:62%;"></div>
+                    <div style="height:12px;border-radius:6px;background:#F4F3F0;width:78%;"></div>
+                    <div style="height:12px;border-radius:6px;background:#F4F3F0;width:55%;"></div>
+                    <div style="font-family:var(--font-mono);font-size:11.5px;color:#7B7974;margin-top:8px;">Rows land here in batches as each chunk completes — the first batch is on its way.</div>
+                  </div>
+                </td></tr>
+              </sc-if>
+              <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="6">
+                <tr style="animation:{{ r.anim }};">
+                  <td style="position:sticky;left:0;background:#FFFFFF;padding:10px 20px;border-top:1px solid #EFF1F3;font-weight:500;white-space:nowrap;">{{ r.name }}</td>
+                  <td style="padding:10px 14px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:12px;color:#7B7974;white-space:nowrap;">{{ r.email }}</td>
+                  <td style="padding:10px 14px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:12px;color:#7B7974;white-space:nowrap;font-variant-numeric:tabular-nums;">{{ r.phone }}</td>
+                  <td style="padding:10px 14px;border-top:1px solid #EFF1F3;white-space:nowrap;">
+                    <span style="font-family:var(--font-mono);font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px 3px;border-radius:999px;background:{{ r.stBg }};color:{{ r.stFg }};">{{ r.st }}</span>
+                    <span style="font-size:12px;color:#7B7974;margin-left:8px;">{{ r.reason }}</span>
+                  </td>
+                  <td style="padding:10px 20px 10px 14px;border-top:1px solid #EFF1F3;white-space:nowrap;">
+                    <sc-if value="{{ r.sf }}" hint-placeholder-val="{{ true }}"><a href="#sf" style="font-family:var(--font-mono);font-size:12px;color:#B53D0A;">View <i class="ph ph-arrow-square-out" style="font-size:11px;" aria-hidden="true"></i></a></sc-if>
+                    <sc-if value="{{ r.noSf }}" hint-placeholder-val="{{ false }}"><span style="color:#D1CDC7;">—</span></sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <!-- ══ VALIDATION FAILURE ══ -->
+  <sc-if value="{{ isValidation }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Validation failed" style="max-width:860px;margin:0 auto;padding:36px 24px 130px;">
+      <button onClick="{{ goHistory }}" style="border:0;background:transparent;padding:0;color:#7B7974;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;font-family:var(--font-body);" style-hover="color:#1B1A18;"><i class="ph ph-arrow-left" aria-hidden="true"></i>Run history</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+        <h1 style="font-family:var(--font-display);font-weight:525;font-size:28px;letter-spacing:-0.02em;margin:0;">Clay rejected this file before the run started</h1>
+        <span style="font-family:var(--font-mono);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px 5px;border-radius:999px;background:#FCBABE;color:#3A0308;">Validation failed</span>
+      </div>
+      <p style="font-size:15px;line-height:1.55;color:#7B7974;margin:0 0 26px;max-width:640px;text-wrap:pretty;"><span style="color:#1B1A18;font-weight:500;">340 rows in saastr-booth.csv didn't validate</span>, so nothing ran and no credits were spent. Fix the rows below in your spreadsheet, then upload the corrected file.</p>
+
+      <section style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;overflow:hidden;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;background:#F4F3F0;flex-wrap:wrap;">
+          <span style="font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#7B7974;">Showing 100 of 340 errors</span>
+          <span style="font-size:12.5px;color:#7B7974;">Clay returns detail for the first 100 lines — the CSV export has the full count.</span>
+          <div style="flex:1;"></div>
+          <button onClick="{{ exportErrors }}" style="border:1px solid #D1CDC7;background:#FFFFFF;border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:500;font-family:var(--font-display);cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:#1B1A18;" style-hover="background:#FEFDFB;"><i class="ph ph-download-simple" aria-hidden="true"></i>Download all 340</button>
+        </div>
+        <div style="max-height:420px;overflow:auto;">
+          <table style="border-collapse:collapse;width:100%;min-width:560px;font-size:13px;">
+            <thead><tr>
+              <th style="position:sticky;top:0;text-align:right;padding:9px 16px;background:#FEFDFB;border-bottom:1px solid #EDEBE8;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;width:60px;">Line</th>
+              <th style="position:sticky;top:0;text-align:left;padding:9px 16px;background:#FEFDFB;border-bottom:1px solid #EDEBE8;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;width:110px;">Field</th>
+              <th style="position:sticky;top:0;text-align:left;padding:9px 16px;background:#FEFDFB;border-bottom:1px solid #EDEBE8;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">What's wrong</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ valErrors }}" as="e" hint-placeholder-count="8">
+                <tr>
+                  <td style="text-align:right;padding:9px 16px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:12px;color:#7B7974;font-variant-numeric:tabular-nums;">{{ e.line }}</td>
+                  <td style="padding:9px 16px;border-top:1px solid #EFF1F3;"><span style="font-family:var(--font-mono);font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px 3px;border-radius:999px;background:#F4F3F0;color:#1B1A18;">{{ e.field }}</span></td>
+                  <td style="padding:9px 16px;border-top:1px solid #EFF1F3;color:#1B1A18;">{{ e.msg }}</td>
+                </tr>
+              </sc-for>
+              <tr><td colSpan="3" style="padding:12px 16px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:11.5px;color:#7B7974;">… 240 more in the download</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button onClick="{{ goNewrun }}" style="border:0;background:#FF7714;color:#381005;font-family:var(--font-display);font-weight:500;font-size:14.5px;padding:12px 24px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;" style-hover="background:#f06c0d;"><i class="ph-bold ph-upload-simple" aria-hidden="true"></i>Upload the fixed file</button>
+        <button onClick="{{ exportErrors }}" style="border:1px solid #D1CDC7;background:#FFFFFF;color:#1B1A18;font-family:var(--font-display);font-weight:500;font-size:14px;padding:11px 20px;border-radius:999px;cursor:pointer;" style-hover="background:#F4F3F0;">Download error list</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- ══ RUN HISTORY ══ -->
+  <sc-if value="{{ isHistory }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Run history" style="max-width:1020px;margin:0 auto;padding:36px 24px 130px;">
+      <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+        <div>
+          <div class="t-eyebrow-sm" style="margin-bottom:10px;">Your runs</div>
+          <h1 style="font-family:var(--font-display);font-weight:525;font-size:32px;letter-spacing:-0.025em;line-height:1;margin:0;">Run history</h1>
+        </div>
+        <div style="flex:1;"></div>
+        <sc-if value="{{ histHasRows }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ goNewrun }}" style="border:0;background:#1B1A18;color:#FEFDFB;font-family:var(--font-display);font-weight:500;font-size:14px;padding:11px 22px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;" style-hover="opacity:.9;"><i class="ph ph-plus" aria-hidden="true"></i>New run</button>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ histEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:20px;padding:70px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;">
+          <img src="assets/Update-CRM.png" alt="" style="width:110px;height:110px;object-fit:contain;margin-bottom:14px;">
+          <div style="font-family:var(--font-display);font-weight:500;font-size:20px;letter-spacing:-0.015em;">No runs yet</div>
+          <p style="font-size:14.5px;color:#7B7974;margin:0 0 20px;max-width:400px;text-wrap:pretty;">Upload a badge-scan CSV and Event Lead Router enriches every person and writes them into a Salesforce campaign — with receipts.</p>
+          <button onClick="{{ goNewrun }}" style="border:0;background:#FF7714;color:#381005;font-family:var(--font-display);font-weight:500;font-size:15px;padding:12px 26px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;" style-hover="background:#f06c0d;">Start your first run<i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ histHasRows }}" hint-placeholder-val="{{ true }}">
+        <section style="background:#FFFFFF;border:1px solid #E6E8EC;border-radius:16px;overflow:hidden;">
+          <div style="overflow-x:auto;">
+            <table style="border-collapse:collapse;width:100%;min-width:820px;font-size:13.5px;">
+              <thead><tr>
+                <th style="text-align:left;padding:10px 20px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Date</th>
+                <th style="text-align:left;padding:10px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">File</th>
+                <th style="text-align:left;padding:10px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Campaign</th>
+                <th style="text-align:right;padding:10px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Rows</th>
+                <th style="text-align:right;padding:10px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Success</th>
+                <th style="text-align:left;padding:10px 20px 10px 14px;background:#F4F3F0;font-family:var(--font-mono);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#7B7974;">Status</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ history }}" as="h" hint-placeholder-count="6">
+                  <tr onClick="{{ h.go }}" tabIndex="{{ zero }}" role="link" aria-label="{{ h.aria }}" style="cursor:pointer;" style-hover="background:#F9F8F5;">
+                    <td style="padding:12px 20px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:12px;color:#7B7974;white-space:nowrap;">{{ h.date }}</td>
+                    <td style="padding:12px 14px;border-top:1px solid #EFF1F3;font-family:var(--font-mono);font-size:12.5px;white-space:nowrap;">{{ h.file }}</td>
+                    <td style="padding:12px 14px;border-top:1px solid #EFF1F3;font-weight:500;white-space:nowrap;">{{ h.campaign }}</td>
+                    <td style="padding:12px 14px;border-top:1px solid #EFF1F3;text-align:right;font-family:var(--font-mono);font-size:12.5px;font-variant-numeric:tabular-nums;">{{ h.rows }}</td>
+                    <td style="padding:12px 14px;border-top:1px solid #EFF1F3;text-align:right;font-family:var(--font-mono);font-size:12.5px;font-variant-numeric:tabular-nums;color:{{ h.rateFg }};">{{ h.rate }}</td>
+                    <td style="padding:12px 20px 12px 14px;border-top:1px solid #EFF1F3;white-space:nowrap;"><span style="font-family:var(--font-mono);font-weight:600;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px 4px;border-radius:999px;background:{{ h.stBg }};color:{{ h.stFg }};">{{ h.status }}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <!-- ══ PROTOTYPE SCREEN SWITCHER (reviewer chrome, not product UI) ══ -->
+  <nav aria-label="Prototype screens" style="position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:60;background:#1B1A18;border-radius:999px;padding:6px;display:flex;align-items:center;gap:2px;max-width:min(94vw,900px);overflow-x:auto;box-shadow:var(--shadow-lg);">
+    <span style="font-family:var(--font-mono);font-weight:600;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(254,253,251,.4);padding:0 8px 0 10px;white-space:nowrap;">Screens</span>
+    <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="8">
+      <sc-if value="{{ n.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:14px;background:rgba(254,253,251,.18);margin:0 4px;flex:none;"></span></sc-if>
+      <sc-if value="{{ n.btn }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ n.go }}" style="border:0;border-radius:999px;padding:7px 11px;font-family:var(--font-mono);font-weight:600;font-size:10px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;white-space:nowrap;background:{{ n.bg }};color:{{ n.fg }};flex:none;" style-hover="color:#FEFDFB;">{{ n.label }}</button>
+      </sc-if>
+    </sc-for>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoScale&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;412 rows · 4 chunks&quot;,&quot;options&quot;:[&quot;412 rows · 4 chunks&quot;,&quot;5,240 rows · 53 chunks&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;simSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:2,&quot;min&quot;:1,&quot;max&quot;:6,&quot;step&quot;:0.5,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Demo&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'monitor', nrVariant: 'default', fileLoaded: true,
+    drop: { missing: true, malformed: true, dupes: true },
+    sim: null, announce: '', navKey: 'live'
+  };
+
+  get speed() { return this.props.simSpeed ?? 2; }
+  get scaleBig() { return String(this.props.demoScale || '').indexOf('5,240') === 0; }
+
+  componentDidMount() {
+    this.preset('live');
+    this._tick = setInterval(() => this.tick(), 300);
+    this._clock = setInterval(() => this.clock(), 1000);
+  }
+  componentWillUnmount() { clearInterval(this._tick); clearInterval(this._clock); }
+  componentDidUpdate(prevProps) {
+    if (prevProps && prevProps.demoScale !== this.props.demoScale && this.state.screen === 'monitor') {
+      this.preset(this.state.navKey === 'complete' ? 'complete' : this.state.navKey === 'live' ? 'live' : this.state.navKey);
+    }
+  }
+
+  // ── data ────────────────────────────────────────────
+  makeRows(n, seed, failMod, skipMod) {
+    const F = ['Sarah','Marcus','Priya','Diego','Hannah','Tobias','Amara','Jin','Lucia','Owen','Nadia','Felix','Grace','Omar','Ivy','Theo','Maya','Ravi','Elena','Cole'];
+    const L = ['Chen','Okafor','Sharma','Ramirez','Kowalski','Berg','Nwosu','Park','Moretti','Gallagher','Haddad','Lindqvist','Tanaka','Petrov','Osei','Whitfield','Iyer','Novak','Fontaine','Brandt'];
+    const D = ['ramp.com','notion.so','figma.com','loom.com','airtable.com','retool.com','plaid.com','brex.com','rippling.com','deel.com','gusto.com','linear.app','render.com','mercury.com','lattice.com','carta.com'];
+    const RS = ['Bad email','No enrichment match','Salesforce write rejected','Rate limited'];
+    const rows = [];
+    for (let i = 0; i < n; i++) {
+      const f = F[(i + seed) % 20], l = L[(i * 7 + seed) % 20], d = D[(i * 3 + seed) % 16];
+      const failed = i % failMod === 5, skipped = !failed && i % skipMod === 7;
+      rows.push({
+        name: f + ' ' + l,
+        email: (f[0] + '.' + l).toLowerCase() + '@' + d,
+        phone: i % 6 === 2 ? '—' : '+1 (512) 555-01' + String((i * 37) % 100).padStart(2, '0'),
+        s: failed ? 'f' : (skipped ? 'k' : 'w'),
+        reason: failed ? RS[i % 4] : (skipped ? 'Already in campaign' : '')
+      });
+    }
+    return rows;
+  }
+
+  buildSim(total, opts) {
+    const o = opts || {};
+    const rows = this.makeRows(total, o.seed ?? 3, o.failMod ?? 37, o.skipMod ?? 53);
+    const sizes = []; for (let r = total; r > 0; r -= 100) sizes.push(Math.min(100, r));
+    return {
+      total, rows, sizes,
+      fin: sizes.map(() => 0), doneCh: sizes.map(() => false), failedCh: sizes.map(() => false),
+      cur: 0, arrived: 0, phase: 'queued', mode: 'live',
+      startTs: Date.now(), elapsed0: 0, lastUp: Date.now(), retryIn: 0, done: false, finalTs: 0,
+      runName: o.runName || 'SXSW 2026 — booth scans', fileName: o.fileName || 'sxsw-badge-scans.csv',
+      startedLabel: '15 Aug 2026 at 14:32 CT'
+    };
+  }
+
+  midState(sim) {
+    const k = Math.max(1, Math.floor(sim.sizes.length * 0.55));
+    for (let i = 0; i < k; i++) { sim.fin[i] = sim.sizes[i]; sim.doneCh[i] = true; }
+    sim.fin[k] = Math.floor(sim.sizes[k] * 0.47);
+    sim.cur = k; sim.arrived = k; sim.phase = 'running'; sim.elapsed0 = 283;
+    return sim;
+  }
+
+  preset(kind) {
+    const total = this.scaleBig ? 5240 : 389;
+    let sim = this.buildSim(total);
+    if (kind === 'live') { /* fresh */ }
+    if (kind === 'stalled') { sim = this.midState(sim); sim.mode = 'stalled'; sim.lastUp = Date.now() - 9000; if (sim.cur > 1) sim.failedCh[sim.cur - 1] = false; }
+    if (kind === 'ratelimited') { sim = this.midState(sim); sim.mode = 'ratelimited'; sim.retryIn = 42; }
+    if (kind === 'offline') { sim = this.midState(sim); sim.mode = 'offline'; sim.lastUp = Date.now() - 38000; }
+    if (kind === 'complete') {
+      sim.fin = sim.sizes.slice(); sim.doneCh = sim.sizes.map(() => true);
+      sim.cur = sim.sizes.length; sim.arrived = sim.sizes.length;
+      sim.phase = 'done'; sim.done = true; sim.elapsed0 = 252;
+    }
+    this.setState({ screen: 'monitor', sim, navKey: kind, announce: '' });
+  }
+
+  tick() {
+    const s = this.state.sim;
+    if (!s || this.state.screen !== 'monitor' || s.done || s.mode !== 'live') return;
+    const sp = this.speed;
+    const t = (Date.now() - s.startTs) * sp + s.elapsed0 * 1000;
+    if (s.elapsed0 === 0) {
+      if (t < 700) { s.phase = 'queued'; return this.forceUpdate(); }
+      if (t < 1700) { s.phase = 'uploading'; return this.forceUpdate(); }
+      if (t < 2900) { s.phase = 'validating'; return this.forceUpdate(); }
+    }
+    if (s.phase !== 'finalizing') s.phase = 'running';
+    if (s.cur < s.sizes.length) {
+      const step = Math.max(1, Math.round(sp * (s.total > 1000 ? 14 : 3.5)));
+      s.fin[s.cur] = Math.min(s.sizes[s.cur], s.fin[s.cur] + step);
+      if (s.fin[s.cur] >= s.sizes[s.cur]) {
+        s.doneCh[s.cur] = true; s.cur++; s.arrived = s.cur;
+        const fin = s.fin.reduce((a, b) => a + b, 0);
+        this.setState({ announce: fin + ' of ' + s.total + ' rows processed. Chunk ' + s.cur + ' of ' + s.sizes.length + ' complete.' });
+      }
+      s.lastUp = Date.now();
+    }
+    if (s.cur >= s.sizes.length) {
+      if (!s.finalTs) { s.finalTs = Date.now(); s.phase = 'finalizing'; }
+      else if (Date.now() - s.finalTs > 1400 / sp) {
+        s.phase = 'done'; s.done = true;
+        this.setState({ announce: 'Run complete. ' + this.countBy(s, 'w') + ' of ' + s.total + ' rows written to Salesforce.' });
+      }
+    }
+    this.forceUpdate();
+  }
+
+  clock() {
+    const s = this.state.sim;
+    if (!s || this.state.screen !== 'monitor') return;
+    if (s.mode === 'ratelimited' && s.retryIn > 0) {
+      s.retryIn--;
+      if (s.retryIn === 0) { s.mode = 'live'; s.lastUp = Date.now(); }
+    }
+    this.forceUpdate();
+  }
+
+  countBy(s, kind) {
+    let idx = 0, n = 0;
+    for (let c = 0; c < s.arrived; c++) {
+      for (let i = 0; i < s.sizes[c]; i++) { if (s.rows[idx + i].s === kind) n++; }
+      idx += s.sizes[c];
+    }
+    return n;
+  }
+  arrivedRows(s) { let n = 0; for (let c = 0; c < s.arrived; c++) n += s.sizes[c]; return n; }
+
+  csv(rows, name) {
+    const esc = v => '"' + String(v).replace(/"/g, '""') + '"';
+    const head = 'name,email,phone,status,failure_reason,salesforce_url';
+    const body = rows.map(r => [r.name, r.email, r.phone, r.s === 'w' ? 'written' : r.s === 'f' ? 'failed' : 'skipped', r.reason, r.s === 'w' ? 'https://clay.lightning.force.com/lead/003' : ''].map(esc).join(','));
+    const blob = new Blob([head + '\n' + body.join('\n')], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  fmtEl(sec) { const m = Math.floor(sec / 60), s = Math.floor(sec % 60); return m + ':' + String(s).padStart(2, '0'); }
+
+  renderVals() {
+    const st = this.state, s = st.sim;
+    const scr = st.screen;
+    const nav = k => () => {
+      if (k === 'signin') this.setState({ screen: 'signin', navKey: k });
+      else if (k === 'rejected') this.setState({ screen: 'rejected', navKey: k });
+      else if (k === 'newrun') this.setState({ screen: 'newrun', nrVariant: 'default', fileLoaded: true, navKey: k });
+      else if (k === 'nrbig') this.setState({ screen: 'newrun', nrVariant: 'big', fileLoaded: true, navKey: k });
+      else if (k === 'nrmulti') this.setState({ screen: 'newrun', nrVariant: 'multi', fileLoaded: true, navKey: k });
+      else if (k === 'validation') this.setState({ screen: 'validation', navKey: k });
+      else if (k === 'history') this.setState({ screen: 'history', histEmpty: false, navKey: k });
+      else if (k === 'histempty') this.setState({ screen: 'history', histEmpty: true, navKey: k });
+      else this.preset(k);
+    };
+    const navDefs = [
+      { k: 'signin', l: 'Sign in' }, { k: 'rejected', l: 'Rejected' }, { sep: 1 },
+      { k: 'newrun', l: 'New run' }, { k: 'nrbig', l: '50k file' }, { k: 'nrmulti', l: 'Matches' }, { sep: 1 },
+      { k: 'live', l: 'Monitor' }, { k: 'stalled', l: 'Stalled' }, { k: 'ratelimited', l: 'Rate ltd' }, { k: 'offline', l: 'Offline' }, { k: 'complete', l: 'Done' }, { sep: 1 },
+      { k: 'validation', l: 'Val. fail' }, { k: 'history', l: 'History' }, { k: 'histempty', l: 'Empty' }
+    ];
+    const navItems = navDefs.map(d => d.sep ? { sep: true, btn: false } : {
+      sep: false, btn: true, label: d.l, go: nav(d.k),
+      bg: st.navKey === d.k ? 'rgba(254,253,251,.16)' : 'transparent',
+      fg: st.navKey === d.k ? '#FEFDFB' : 'rgba(254,253,251,.6)'
+    });
+
+    // new run
+    const drop = st.drop;
+    const dropped = (drop.missing ? 12 : 0) + (drop.malformed ? 3 : 0) + (drop.dupes ? 8 : 0);
+    const eff = 412 - dropped;
+    const seg = (id, on) => ({
+      dropBg: on ? '#1B1A18' : 'transparent', dropFg: on ? '#FEFDFB' : '#7B7974',
+      keepBg: on ? 'transparent' : '#1B1A18', keepFg: on ? '#7B7974' : '#FEFDFB',
+      setDrop: () => this.setState({ drop: { ...this.state.drop, [id]: true } }),
+      setKeep: () => this.setState({ drop: { ...this.state.drop, [id]: false } })
+    });
+    const quality = [
+      { count: 12, label: "Rows that can't be identified", desc: 'Each row needs name + email, name + company, or a LinkedIn URL. These have none of those.', id: 'missing', numFg: '#9E5802', bt: 'none' },
+      { count: 3, label: 'Malformed emails', desc: 'Things like "s.chen@rampcom" — cleaned here, before anything reaches Clay.', id: 'malformed', numFg: '#9E5802', bt: '1px solid #EFF1F3' },
+      { count: 8, label: 'Exact duplicates in this file', desc: 'Same person twice. Deduped here, before anything reaches Clay.', id: 'dupes', numFg: '#9E5802', bt: '1px solid #EFF1F3' }
+    ].map(q => ({ ...q, aria: q.label + ': drop or keep', ...seg(q.id, drop[q.id]) }));
+
+    const mappings = [
+      { field: 'First name', tag: 'Identity', tagFg: '#B53D0A', value: 'first_name', sample: 'SARAH' },
+      { field: 'Last name', tag: 'Identity', tagFg: '#B53D0A', value: 'last_name', sample: 'chen' },
+      { field: 'Email', tag: 'Identity', tagFg: '#B53D0A', value: 'email_address', sample: 's.chen@ramp.com' },
+      { field: 'Company', tag: 'Identity', tagFg: '#B53D0A', value: 'company', sample: 'Ramp' },
+      { field: 'Title', tag: 'Optional', tagFg: '#7B7974', value: 'job_title', sample: 'VP Revenue Ops' },
+      { field: 'Phone', tag: 'Optional', tagFg: '#7B7974', value: 'Not mapped', sample: '—' },
+      { field: 'LinkedIn URL', tag: 'Identity', tagFg: '#B53D0A', value: 'linkedin', sample: 'linkedin.com/in/sarahchen' }
+    ].map(m => ({ ...m, aria: 'Source column for ' + m.field }));
+    const sourceCols = ['first_name', 'last_name', 'email_address', 'company', 'job_title', 'linkedin', 'badge_id', 'scan_time', 'booth_notes', 'Not mapped'];
+
+    const prevRows = [
+      { a: 'SARAH', b: 'chen', c: 's.chen@ramp.com', d: 'Ramp', e: 'VP Revenue Ops', f: 'B-04412' },
+      { a: 'marcus', b: 'OKAFOR', c: 'm.okafor@notion.so', d: 'Notion', e: 'Growth Lead', f: 'B-04413' },
+      { a: 'Priya', b: 'Sharma', c: '', d: 'Figma', e: 'Head of Marketing Ops', f: 'B-04414' },
+      { a: 'DIEGO', b: 'ramirez', c: 'd.ramirez@loom.com', d: 'loom', e: 'RevOps Manager', f: 'B-04415' },
+      { a: 'Hannah', b: 'Kowalski', c: 'h.kowalski@airtable.com', d: 'Airtable', e: 'Events Manager', f: 'B-04416' }
+    ];
+
+    const nrVariant = st.nrVariant;
+    const startBlocked = nrVariant === 'big';
+    const bigFile = nrVariant === 'big';
+
+    // monitor
+    let mon = {};
+    if (s) {
+      const finished = s.fin.reduce((a, b) => a + b, 0);
+      const pct = s.total ? finished / s.total : 0;
+      const elapsedSec = s.elapsed0 + (Date.now() - s.startTs) / 1000;
+      const agoSec = Math.max(0, Math.round((Date.now() - s.lastUp) / 1000));
+      const rate = elapsedSec > 4 && finished > 0 ? Math.round(finished / (elapsedSec / 60) / 10) * 10 : 0;
+      const showRate = s.phase === 'running' && rate > 0 && s.mode === 'live';
+      const showEta = showRate && pct > 0.08 && elapsedSec > 6;
+      const etaMin = showEta ? Math.max(1, Math.ceil((s.total - finished) / rate)) : 0;
+      const wSucc = this.countBy(s, 'w'), wFail = this.countBy(s, 'f'), wSkip = this.countBy(s, 'k');
+      const arrRows = this.arrivedRows(s);
+      const succRate = arrRows > 0 ? (wSucc / arrRows * 100) : null;
+
+      const pills = {
+        queued: ['Queued', '#F4F3F0', '#1B1A18', '#7B7974', ''],
+        uploading: ['Uploading', '#F0F8FF', '#001433', '#429EFF', 'dotBlink 1.2s infinite'],
+        validating: ['Validating', '#F0F8FF', '#001433', '#429EFF', 'dotBlink 1.2s infinite'],
+        running: ['Running', '#EEF773', '#102B03', '#808000', 'dotBlink 1.4s infinite'],
+        finalizing: ['Finalizing', '#F0FCFF', '#002833', '#3BD3FD', 'dotBlink 1.2s infinite'],
+        donefail: ['Completed with failures', '#FBE189', '#372201', '#9E5802', ''],
+        doneok: ['Complete', '#EEF773', '#102B03', '#808000', ''],
+        stalled: ['Stalled', '#FBE189', '#372201', '#9E5802', 'dotBlink 2s infinite']
+      };
+      let pk = s.phase;
+      if (s.done) pk = wFail > 0 ? 'donefail' : 'doneok';
+      else if (s.mode === 'stalled') pk = 'stalled';
+      const P = pills[pk] || pills.running;
+
+      const chunks = s.sizes.map((size, i) => {
+        const failed = s.failedCh[i], done = s.doneCh[i];
+        const run = !done && !failed && i === s.cur && (s.phase === 'running' || s.phase === 'finalizing');
+        const stalled = run && s.mode !== 'live';
+        return {
+          label: String(i + 1),
+          sub: s.fin[i] + '/' + size,
+          title: 'Chunk ' + (i + 1) + ' — ' + (failed ? 'failed' : done ? 'complete' : run ? (stalled ? 'stuck at ' + s.fin[i] + ' of ' + size : 'running · ' + s.fin[i] + ' of ' + size) : 'queued'),
+          bg: failed ? '#FCBABE' : done ? '#EEF773' : run ? '#FCC9AB' : '#F4F3F0',
+          bd: failed ? '#FCBABE' : done ? '#EEF773' : run ? '#FCC9AB' : '#E6E8EC',
+          fg: failed ? '#3A0308' : done ? '#576200' : run ? '#B53D0A' : '#7B7974',
+          anim: run && !stalled ? 'chunkPulse 1.5s cubic-bezier(.2,0,0,1) infinite' : ''
+        };
+      });
+
+      // table rows: newest chunk first
+      let all = [];
+      let idx0 = 0;
+      const batches = [];
+      for (let c = 0; c < s.arrived; c++) { batches.push(s.rows.slice(idx0, idx0 + s.sizes[c])); idx0 += s.sizes[c]; }
+      for (let c = batches.length - 1; c >= 0; c--) {
+        const fresh = c === batches.length - 1 && !s.done;
+        batches[c].forEach((r, i) => all.push({ r, fresh, i }));
+      }
+      const cap = 250;
+      const truncated = all.length > cap;
+      const shown = all.slice(0, cap);
+      const stMap = { w: ['Written', '#EEF773', '#576200'], f: ['Failed', '#FCBABE', '#3A0308'], k: ['Skipped', '#FBE189', '#9E5802'] };
+      const tableRows = shown.map((x, j) => {
+        const m = stMap[x.r.s];
+        return {
+          name: x.r.name, email: x.r.email, phone: x.r.phone,
+          st: m[0], stBg: m[1], stFg: m[2], reason: x.r.reason,
+          sf: x.r.s === 'w', noSf: x.r.s !== 'w',
+          anim: x.fresh ? 'rowIn .5s cubic-bezier(.2,0,0,1) both ' + Math.min(x.i * 14, 500) + 'ms' : ''
+        };
+      });
+
+      const groups = {};
+      let gi = 0;
+      for (let c = 0; c < s.arrived; c++) { for (let i = 0; i < s.sizes[c]; i++) { const r = s.rows[gi + i]; if (r.s === 'f') groups[r.reason] = (groups[r.reason] || 0) + 1; } gi += s.sizes[c]; }
+      const failGroups = Object.keys(groups).map(k => ({ label: k, count: groups[k] })).sort((a, b) => b.count - a.count);
+
+      const phaseHints = {
+        queued: 'Waiting for a worker — usually seconds.',
+        uploading: 'Sending your file to Clay.',
+        validating: 'Clay is checking every row before spending credits.',
+        running: 'Enriching in chunks of 100 — rows land below as each completes.',
+        finalizing: 'Wrapping up the last writes to Salesforce.'
+      };
+
+      mon = {
+        runName: s.runName, runFile: s.fileName, startedAt: s.startedLabel,
+        elapsedText: this.fmtEl(elapsedSec),
+        updatedText: agoSec < 3 ? 'just now' : agoSec + 's ago',
+        updatedFg: agoSec > 15 ? '#C22E3D' : '#7B7974',
+        pillLabel: P[0], pillBg: P[1], pillFg: P[2], pillDot: P[3], pillAnim: P[4],
+        pctInt: Math.floor(pct * 100), pctW: (pct * 100).toFixed(1) + '%',
+        processedText: finished.toLocaleString() + ' of ' + s.total.toLocaleString() + ' rows',
+        phaseHint: s.mode === 'stalled' ? 'Paused — see the notice above.' : s.mode === 'ratelimited' ? 'Paused while Clay backs off.' : s.mode === 'offline' ? 'Last known state — reconnecting.' : (phaseHints[s.phase] || ''),
+        hasRate: showRate, rateText: rate.toLocaleString(),
+        hasEta: showEta, etaText: etaMin <= 1 ? '< 1 min' : '≈ ' + etaMin + ' min',
+        chunks, chunksDiscrete: chunks.length <= 14, chunksDense: chunks.length > 14,
+        chunkSummary: s.arrived + ' of ' + s.sizes.length + ' complete',
+        tiles: [
+          { label: 'Total', value: s.total.toLocaleString(), fg: '#1B1A18' },
+          { label: 'Succeeded', value: wSucc.toLocaleString(), fg: '#1B1A18' },
+          { label: 'Failed', value: wFail.toLocaleString(), fg: wFail > 0 ? '#C22E3D' : '#1B1A18' },
+          { label: 'Skipped', value: wSkip.toLocaleString(), fg: '#1B1A18' },
+          { label: 'Success rate', value: succRate === null ? '—' : succRate.toFixed(1) + '%', fg: '#1B1A18' }
+        ],
+        hasFailGroups: failGroups.length > 0, failGroups,
+        tableRows, tableEmpty: all.length === 0,
+        tableNote: all.length === 0 ? 'Waiting on the first chunk' : truncated ? 'Showing the latest ' + cap + ' of ' + all.length.toLocaleString() + ' — the export has every row' : all.length.toLocaleString() + ' rows in',
+        notDone: !s.done, isDone: s.done,
+        isStalled: s.mode === 'stalled' && !s.done,
+        isRateltd: s.mode === 'ratelimited' && !s.done,
+        isOffline: s.mode === 'offline' && !s.done,
+        retryIn: s.retryIn,
+        stalledDetail: 'Chunk ' + (s.cur + 1) + ' has been stuck at ' + (s.fin[s.cur] || 0) + ' of ' + (s.sizes[s.cur] || 100) + ' rows.',
+        finalRate: (succRate === null ? 0 : succRate).toFixed(1) + '%',
+        finalLine: wSucc.toLocaleString() + ' of ' + s.total.toLocaleString() + ' people written to SXSW 2026 — Booth Leads. That\'s the number for your leadership update.',
+        finalMeta: wFail + ' failed · ' + wSkip + ' skipped (already in campaign) · finished in ' + this.fmtEl(s.done ? (s.elapsed0 || elapsedSec) : elapsedSec),
+        hasFails: wFail > 0, failCount: wFail,
+        retryFailed: () => {
+          const fails = wFail;
+          const sim = this.buildSim(fails, { seed: 9, failMod: 6, skipMod: 999, runName: 'Retry — ' + fails + ' failed rows', fileName: s.fileName });
+          this.setState({ screen: 'monitor', sim, navKey: 'live', announce: 'Retry run started with ' + fails + ' rows.' });
+        },
+        exportFull: () => this.csv(s.rows, 'sxsw-2026-booth-leads-results.csv'),
+        exportFails: () => this.csv(s.rows.filter(r => r.s === 'f'), 'sxsw-2026-booth-leads-failures.csv'),
+        refreshNow: () => { const x = this.state.sim; if (x) { x.lastUp = Date.now(); if (x.mode === 'offline') x.mode = 'live'; } this.forceUpdate(); },
+        retryStuck: () => { const x = this.state.sim; if (x) { x.mode = 'live'; x.startTs = Date.now(); x.elapsed0 = 283; x.lastUp = Date.now(); } this.setState({ navKey: 'live' }); }
+      };
+    }
+
+    const campMatches = [
+      { name: 'SXSW 2026 — Booth Leads', meta: 'Conference · 701Kd…HcQAJ', status: 'Active', stBg: '#EEF773', stFg: '#102B03', members: '1,204 members', bg: '#FFFFFF' },
+      { name: 'SXSW 2026 — Party RSVPs', meta: 'Event · 701Kd…R2wAB', status: 'Active', stBg: '#EEF773', stFg: '#102B03', members: '312 members', bg: '#FFFFFF' },
+      { name: 'SXSW 2025 — Booth Leads', meta: 'Conference · 701Hs…9kQAT', status: 'Completed', stBg: '#F4F3F0', stFg: '#7B7974', members: '2,847 members', bg: '#FFFFFF' },
+      { name: 'SXSW 2025 — Speaker Dinner', meta: 'Event · 701Hs…M4nAF', status: 'Completed', stBg: '#F4F3F0', stFg: '#7B7974', members: '48 members', bg: '#FFFFFF' }
+    ];
+
+    const valErrors = [
+      { line: 14, field: 'email', msg: '"s.chen@rampcom" is missing a valid domain — did you mean ramp.com?' },
+      { line: 27, field: 'row', msg: 'No email, no name + company, no LinkedIn URL — nothing to identify this person by.' },
+      { line: 31, field: 'first_name', msg: 'Empty — a name is needed when there\'s no LinkedIn URL.' },
+      { line: 58, field: 'email', msg: '"marcus.okafor@" has no domain at all.' },
+      { line: 71, field: 'phone', msg: '"call after 3pm" isn\'t a phone number.' },
+      { line: 89, field: 'email', msg: 'Contains a space — emails can\'t have spaces.' },
+      { line: 102, field: 'row', msg: 'No email, no name + company, no LinkedIn URL — nothing to identify this person by.' },
+      { line: 118, field: 'last_name', msg: 'Empty — a name is needed when there\'s no LinkedIn URL.' },
+      { line: 133, field: 'email', msg: '"priya@@figma.com" has a doubled @.' },
+      { line: 140, field: 'linkedin', msg: '"linkedin.com/company/figma" is a company page, not a person.' }
+    ];
+
+    const histStatus = {
+      cwf: ['Completed with failures', '#FBE189', '#372201'],
+      ok: ['Complete', '#EEF773', '#102B03'],
+      vf: ['Validation failed', '#FCBABE', '#3A0308']
+    };
+    const goDone = () => this.preset('complete');
+    const history = [
+      { date: 'Today, 14:32', file: 'sxsw-badge-scans.csv', campaign: 'SXSW 2026 — Booth Leads', rows: '389', rate: '95.4%', st: 'cwf', go: goDone },
+      { date: '12 Aug 2026', file: 'shoptalk-day2.csv', campaign: 'ShopTalk 2026', rows: '1,204', rate: '99.2%', st: 'ok', go: goDone },
+      { date: '12 Aug 2026', file: 'shoptalk-day1.csv', campaign: 'ShopTalk 2026', rows: '986', rate: '98.9%', st: 'ok', go: goDone },
+      { date: '28 Jul 2026', file: 'saastr-booth.csv', campaign: 'SaaStr Annual 2026', rows: '2,041', rate: '97.6%', st: 'ok', go: goDone },
+      { date: '28 Jul 2026', file: 'saastr-booth.csv', campaign: '—', rows: '2,380', rate: '—', st: 'vf', go: () => this.setState({ screen: 'validation', navKey: 'validation' }) },
+      { date: '3 Jul 2026', file: 'fieldevent-nyc.csv', campaign: 'NYC Field Event — Summer', rows: '118', rate: '100%', st: 'ok', go: goDone }
+    ].map(h => ({
+      ...h, status: histStatus[h.st][0], stBg: histStatus[h.st][1], stFg: histStatus[h.st][2],
+      rateFg: h.rate === '—' ? '#7B7974' : '#1B1A18',
+      aria: h.file + ', ' + h.campaign + ', ' + histStatus[h.st][0]
+    }));
+
+    const chunksForEff = Math.ceil(eff / 100);
+    return {
+      zero: 0,
+      showChrome: scr !== 'signin' && scr !== 'rejected',
+      isSignin: scr === 'signin', isRejected: scr === 'rejected',
+      isNewrun: scr === 'newrun', isMonitor: scr === 'monitor',
+      isValidation: scr === 'validation', isHistory: scr === 'history',
+      histEmpty: scr === 'history' && !!st.histEmpty,
+      histHasRows: scr === 'history' && !st.histEmpty,
+      navHistBg: scr === 'history' ? '#F4F3F0' : 'transparent',
+      navNewBg: scr === 'newrun' ? '#F4F3F0' : 'transparent',
+      goSignin: nav('signin'), goHistory: nav('history'), goNewrun: nav('newrun'),
+      signIn: nav('histempty'),
+      navItems, announce: st.announce,
+      // new run
+      nrEmpty: !st.fileLoaded, nrLoaded: st.fileLoaded,
+      nrBig: bigFile, nrNormal: st.fileLoaded && nrVariant === 'default',
+      nrMulti: nrVariant === 'multi',
+      fileName: bigFile ? 'all-events-2026-master.csv' : 'sxsw-badge-scans.csv',
+      fileMeta: bigFile ? '52,318 rows · comma-delimited · 6.1 MB' : '412 rows · comma-delimited · 48 KB',
+      loadFile: () => this.setState({ fileLoaded: true, nrVariant: 'default' }),
+      removeFile: () => this.setState({ fileLoaded: false }),
+      prevCols: ['first_name', 'last_name', 'email_address', 'company', 'job_title', 'badge_id'],
+      prevRows, mappings, sourceCols, quality,
+      effRows: eff, droppedRows: dropped,
+      campQuery: nrVariant === 'multi' ? 'sxsw' : 'SXSW 2026 — Booth Leads',
+      campMatches,
+      reviewRows: st.fileLoaded ? (bigFile ? '52,318 rows' : eff + ' rows') : 'No file yet',
+      reviewCost: st.fileLoaded && !bigFile ? '≈' + (eff * 2).toLocaleString() + ' credits · ≈' + chunksForEff + ' min' : '',
+      startBlocked: startBlocked || !st.fileLoaded,
+      startOpacity: (startBlocked || !st.fileLoaded) ? 0.4 : 1,
+      startReason: bigFile ? 'Split the file to under 50,000 rows first' : (!st.fileLoaded ? 'Upload a CSV to start' : ''),
+      startRun: () => {
+        if (startBlocked || !this.state.fileLoaded) return;
+        const sim = this.buildSim(eff);
+        this.setState({ screen: 'monitor', sim, navKey: 'live', announce: 'Run started with ' + eff + ' rows.' });
+      },
+      runAnother: () => this.setState({ screen: 'newrun', nrVariant: 'default', fileLoaded: false, navKey: 'newrun' }),
+      exportErrors: () => {
+        const blob = new Blob(['line,field,message\n' + valErrors.map(e => e.line + ',' + e.field + ',"' + e.msg + '"').join('\n')], { type: 'text/csv' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'saastr-booth-validation-errors.csv'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      },
+      valErrors, history,
+      ...mon
+    };
+  }
+}
+</script>
+</body>
+</html>

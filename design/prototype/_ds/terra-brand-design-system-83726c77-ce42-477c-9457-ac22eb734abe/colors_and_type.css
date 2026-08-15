@@ -1,0 +1,301 @@
+/* ══════════════════════════════════════════════════════════════════
+   TERRA — Clay brand design tokens
+   Extracted from Clay_Brand-Guidelines_v2.1.fig (Figma)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Poppins — product-UI legacy fallback (--font-fallback-2).
+   Delivered via Google Fonts CDN until/unless a local file is added. */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Speaker lockup component (headshot + name + title) — .spk-lockup */
+@import url("./speaker-lockup.css");
+
+@font-face {
+  font-family: "Roobert";
+  src: url("./fonts/RoobertVF.ttf") format("truetype-variations"),
+       url("./fonts/RoobertVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roobert Uprights";
+  src: url("./fonts/RoobertUprightsVF.ttf") format("truetype-variations"),
+       url("./fonts/RoobertUprightsVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roobert SemiMono";
+  src: url("./fonts/RoobertSemiMonoVF.ttf") format("truetype-variations"),
+       url("./fonts/RoobertSemiMonoVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  /* Self-hosted fallback family (Google-Fonts / non-Roobert environments) */
+  font-family: "Inter Tight";
+  src: url("./fonts/InterTight-VariableFont_wght.ttf") format("truetype-variations"),
+       url("./fonts/InterTight-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── NEUTRAL / OAT ───────────────────────────────────────────
+     The workhorse palette. Every surface, body, and border. */
+  --oat-100:  #FEFDFB; /* page bg */
+  --oat-200:  #F4F3F0; /* card / slab bg */
+  --oat-300:  #D1CDC7; /* disabled surface / divider */
+  --oat-400:  #7B7974; /* muted text */
+  --oat-500:  #1B1A18; /* body text, ink */
+
+  /* Raw extra neutrals seen across UI screens */
+  --ink:          #000000;
+  --ink-soft:     #16181F; /* very-dark UI background */
+  --ink-muted:    #71798A; /* secondary UI label */
+  --grey-line:    #E6E8EC; /* UI 1px lines */
+  --grey-line-2:  #EFF1F3; /* UI 1px lines, softer */
+  --grey-fill:    #D6D9DF; /* chip bg */
+  --grey-label:   #979DA9; /* chip label */
+  --white:        #FFFFFF;
+
+  /* ── TANGERINE (primary accent / CTA) ──────────────────────── */
+  --tangerine-100: #FFF3ED;
+  --tangerine-200: #FCC9AB;
+  --tangerine-300: #FF7714; /* brand */
+  --tangerine-400: #B53D0A;
+  --tangerine-500: #381005;
+
+  /* ── LIME ──────────────────────────────────────────────────── */
+  --lime-100: #FCFEE2;
+  --lime-200: #EEF773;
+  --lime-300: #CBD810; /* brand */
+  --lime-400: #808000;
+  --lime-500: #102B03;
+
+  /* ── LEMON ─────────────────────────────────────────────────── */
+  --lemon-100: #FEFAE8;
+  --lemon-200: #FBE189;
+  --lemon-300: #FDBE11;
+  --lemon-400: #9E5802;
+  --lemon-500: #372201;
+
+  /* ── POMEGRANATE ───────────────────────────────────────────── */
+  --pom-100: #FFF1F2;
+  --pom-200: #FCBABE;
+  --pom-300: #FB4450;
+  --pom-400: #C22E3D;
+  --pom-500: #3A0308;
+
+  /* ── DRAGONFRUIT (hot pink) ────────────────────────────────── */
+  --dragon-100: #FFF0FA;
+  --dragon-200: #F8B9E4;
+  --dragon-300: #FF70D2; /* signature accent — use sparingly */
+  --dragon-400: #CC089E;
+  --dragon-500: #46022F;
+
+  /* ── UBE (violet) ──────────────────────────────────────────── */
+  --ube-100: #F5F3FF;
+  --ube-200: #C8BBFB;
+  --ube-300: #A17BF9;
+  --ube-400: #6D4CD6;
+  --ube-500: #160038;
+
+  /* ── BLUEBERRY ─────────────────────────────────────────────── */
+  --blueberry-100: #F0F8FF;
+  --blueberry-200: #BEDFFE;
+  --blueberry-300: #429EFF;
+  --blueberry-400: #395AFA;
+  --blueberry-500: #001433;
+
+  /* ── SLUSHIE (cyan) ────────────────────────────────────────── */
+  --slushie-100: #F0FCFF;
+  --slushie-200: #AAEBFD;
+  --slushie-300: #3BD3FD;
+  --slushie-400: #008BAD;
+  --slushie-500: #002833;
+
+  /* ── SEMANTIC ROLES ────────────────────────────────────────── */
+  --bg:           var(--oat-100);
+  --bg-raised:    var(--oat-200);
+  --bg-inverse:   var(--oat-500);
+  --fg:           var(--oat-500);
+  --fg-muted:     var(--oat-400);
+  --fg-subtle:    var(--oat-300);
+  --fg-inverse:   var(--oat-100);
+  --border:       #EDEBE8;
+  --border-strong:var(--oat-300);
+  --accent:       var(--slushie-300);
+  --accent-fg:    var(--slushie-500);
+  --danger:       var(--pom-300);
+  --success:      var(--lime-300);
+
+  /* ── TYPOGRAPHY FAMILIES ───────────────────────────────────── */
+  --font-display: "Roobert", "Roobert Uprights", "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-body:    "Roobert", "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-mono:    "Roobert SemiMono", "JetBrains Mono", ui-monospace, monospace;
+  --font-fallback-1: "Inter Tight", "Inter", system-ui, sans-serif;   /* self-hosted fallback */
+  --font-fallback-2: "Poppins", system-ui, sans-serif; /* Clay product UI legacy */
+
+  /* ── TYPE SCALE  (from Figma: multiplier / px) ─────────────── */
+  /*  Values: weight  tracking%  letter-spacing%  */
+  --size-eyebrow-3:    12px;  /* 1x      · 600 · +12%   */
+  --size-eyebrow-2:    16px;  /* 1x      · 600 · +12%   */
+  --size-eyebrow-1:    32px;  /* 4x      · 650 · +7%    */
+  --size-heading-1:    192px; /* 24x     · 575 · −4%    */
+  --size-heading-2:    96px;  /* 12x     · 500 · −3%    */
+  --size-heading-3:    48px;  /* 6x      · 500 · −2%    */
+  --size-body-lg:      24px;  /* 1.5x    · 400 · 0%     */
+  --size-body:         16px;  /* 1x      · 400 · +1.5%  */
+  --size-body-xs:      12px;  /* 0.75x   · 400 · +4%    */
+
+  /* ── RADIUS ───────────────────────────────────────────────── */
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;   /* color-swatch tiles, tile shapes */
+  --radius-2xl: 32px;   /* marketing cards */
+  --radius-pill: 999px; /* buttons */
+
+  /* ── SHADOW / ELEVATION ───────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 8px 20px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 24px 48px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.04);
+
+  /* ── SPACING ──────────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-8:  48px;
+  --space-10: 64px;
+  --space-12: 96px;
+  --space-16: 128px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SEMANTIC TYPOGRAPHY CLASSES
+   Use these directly in mocks. They match the Figma Type-Hierarchy
+   frame exactly (weight, tracking, leading, color).
+   ══════════════════════════════════════════════════════════════════ */
+
+.t-eyebrow-tertiary,
+.t-eyebrow-sm {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variation-settings: "MONO" 0.5;
+  font-size: var(--size-eyebrow-3);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.t-eyebrow-secondary,
+.t-eyebrow-md {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variation-settings: "MONO" 0.5;
+  font-size: var(--size-eyebrow-2);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.t-eyebrow-primary,
+.t-eyebrow-lg {
+  font-family: var(--font-mono);
+  font-weight: 550;
+  font-variation-settings: "MONO" 0.5;
+  font-size: var(--size-eyebrow-1);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.t-h1, .t-h2, .t-h3 {
+  /* Clay display headings: SS01 (single-storey 'a') + SS10 ('?') + SS11 ('t') */
+  font-feature-settings: "ss01" on, "ss10" on, "ss11" on;
+  font-variant-alternates: styleset(ss01, ss10, ss11);
+}
+.t-h1 {
+  font-family: var(--font-display);
+  font-weight: 575;
+  font-size: clamp(64px, 9vw, 192px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(48px, 6vw, 96px);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.t-h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(32px, 3vw, 48px);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.t-body-lg, .t-body, .t-body-sm, .t-body-xs, .t-caption {
+  /* Clay body copy: SS02 ('g') + SS06 ('l') + SS10 ('?') */
+  font-feature-settings: "ss02" on, "ss06" on, "ss10" on;
+  font-variant-alternates: styleset(ss02, ss06, ss10);
+}
+.t-body-lg {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--size-body-lg);
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+.t-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--size-body);
+  line-height: 1.45;
+  letter-spacing: 0.015em;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+.t-body-xs,
+.t-caption {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--size-body-xs);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--fg-muted);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--fg);
+}
+
+/* Element defaults — plain HTML should look on-brand by default */
+html { background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+body { margin: 0; }
+h1 { font: inherit; }
+h1, h2, h3, h4, h5 { margin: 0; }
+h1 { composes: t-h1; }

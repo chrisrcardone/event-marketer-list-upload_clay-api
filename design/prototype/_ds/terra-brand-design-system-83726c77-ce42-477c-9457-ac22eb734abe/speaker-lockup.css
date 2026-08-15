@@ -1,0 +1,113 @@
+/* ══════════════════════════════════════════════════════════════════
+   TERRA — SPEAKER LOCKUP (headshot + name + title)
+   Source: Claude-Snippets_v1.11.fig → Avatars/Speaker-vertical,
+   Speaker-horizontal, Speaker-no-photo.
+
+   One variable scales the whole unit:
+     --spk-size  = the NAME font-size (default 48px).
+   Everything else derives from it in em:
+     vertical    headshot : name : title = 8.75 : 1 : 0.5
+     horizontal  headshot : name : title = 2.5  : 1 : 0.5
+     no-photo               name : title =        1 : 0.5
+   Name→title gap is 0.25em (12px @ 48px name) in every layout.
+
+   Markup:
+     <div class="spk-lockup vertical" style="--spk-size:48px;">
+       <div class="spk-avatar m-c"><img src="…" alt="…"></div>
+       <div class="spk-meta">
+         <p class="spk-name">Firstname Lastname</p>
+         <p class="spk-title">Title in all caps</p>
+       </div>
+     </div>
+   Layouts: .vertical · .horizontal · .no-photo (omit .spk-avatar).
+   Masks: m-a … m-g — Terra's organic blob shapes, never squares
+   or circles. The avatar slot accepts an <img> or an <image-slot>.
+
+   Theming hooks (optional):
+     --spk-fg         name color            (default --fg ink)
+     --spk-bg         surface behind lockup (used to mute the title)
+     --spk-title-fg   explicit title color override
+     --spk-avatar-bg  empty-headshot fill   (default --oat-200)
+   ══════════════════════════════════════════════════════════════════ */
+
+.spk-lockup {
+  display: flex;
+  font-size: var(--spk-size, 48px);
+  color: var(--spk-fg, var(--fg, #1B1A18));
+}
+
+/* ── Headshot, masked with the brand blob shapes ────────────────── */
+.spk-avatar {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  background: var(--spk-avatar-bg, var(--oat-200, #F4F3F0));
+  -webkit-mask-repeat: no-repeat;         mask-repeat: no-repeat;
+  -webkit-mask-position: center;          mask-position: center;
+  -webkit-mask-size: 100% 100%;           mask-size: 100% 100%;
+}
+.spk-avatar.m-a { -webkit-mask-image: url("./assets/avatars/mask-a.svg"); mask-image: url("./assets/avatars/mask-a.svg"); }
+.spk-avatar.m-b { -webkit-mask-image: url("./assets/avatars/mask-b.svg"); mask-image: url("./assets/avatars/mask-b.svg"); }
+.spk-avatar.m-c { -webkit-mask-image: url("./assets/avatars/mask-c.svg"); mask-image: url("./assets/avatars/mask-c.svg"); }
+.spk-avatar.m-d { -webkit-mask-image: url("./assets/avatars/mask-d.svg"); mask-image: url("./assets/avatars/mask-d.svg"); }
+.spk-avatar.m-e { -webkit-mask-image: url("./assets/avatars/mask-e.svg"); mask-image: url("./assets/avatars/mask-e.svg"); }
+.spk-avatar.m-f { -webkit-mask-image: url("./assets/avatars/mask-f.svg"); mask-image: url("./assets/avatars/mask-f.svg"); }
+.spk-avatar.m-g { -webkit-mask-image: url("./assets/avatars/mask-g.svg"); mask-image: url("./assets/avatars/mask-g.svg"); }
+.spk-avatar > img,
+.spk-avatar > image-slot {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ── Name + title stack ─────────────────────────────────────────── */
+.spk-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.spk-name {
+  font-family: var(--font-display, "Roobert", system-ui, sans-serif);
+  font-weight: 500;
+  font-size: 1em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: inherit;
+  font-feature-settings: "ss01" on, "ss10" on, "ss11" on;
+  text-wrap: balance;
+}
+.spk-title {
+  font-family: var(--font-mono, "Roobert SemiMono", ui-monospace, monospace);
+  font-variation-settings: "MONO" 0.5;
+  font-weight: 600;
+  font-size: 0.5em;
+  line-height: 1.15;
+  letter-spacing: normal; /* no added tracking */
+  text-transform: uppercase;
+  margin: 0;
+  text-wrap: balance;
+  color: var(--spk-title-fg,
+         color-mix(in srgb, var(--spk-fg, var(--fg, #1B1A18)) 55%,
+                            var(--spk-bg, var(--bg, #FEFDFB))));
+}
+
+/* ── Layouts ────────────────────────────────────────────────────── */
+.spk-lockup.vertical {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.667em; /* 32px @ 48px name */
+}
+.spk-lockup.vertical .spk-avatar { width: 8.75em; height: 8.75em; }
+.spk-lockup.vertical .spk-meta   { align-items: center; text-align: center; gap: 0.25em; /* 12px @ 48px */ }
+
+.spk-lockup.horizontal {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5em; /* 32px @ 64px name */
+}
+.spk-lockup.horizontal .spk-avatar { width: 2.5em; height: 2.5em; }
+.spk-lockup.horizontal .spk-meta   { align-items: flex-start; gap: 0.25em; /* 12px @ 48px */ }
+
+.spk-lockup.no-photo .spk-meta { align-items: flex-start; gap: 0.25em; /* 12px @ 48px */ }
