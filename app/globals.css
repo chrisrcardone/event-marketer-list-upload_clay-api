@@ -1,0 +1,347 @@
+@import "tailwindcss";
+
+/* ════════════════════════════════════════════════════════════════════
+   TERRA — Clay brand design tokens
+   Extracted verbatim from the Terra design system bundle
+   (design/prototype/_ds/…/colors_and_type.css). This file is the single
+   place a fork edits to reskin the app: every component references these
+   custom properties (directly or through the Tailwind theme below).
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Typefaces ──────────────────────────────────────────────────────
+   Roobert is Clay's licensed typeface and is NOT committed to this repo
+   (see .gitignore). Drop the three variable TTFs into public/fonts/roobert/
+   and these @font-face rules pick them up; until then the stack falls back
+   to the committed Inter Tight (OFL), per the Terra fallback policy. */
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/roobert/RoobertVF.ttf") format("truetype-variations"),
+       url("/fonts/roobert/RoobertVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roobert Uprights";
+  src: url("/fonts/roobert/RoobertUprightsVF.ttf") format("truetype-variations"),
+       url("/fonts/roobert/RoobertUprightsVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roobert SemiMono";
+  src: url("/fonts/roobert/RoobertSemiMonoVF.ttf") format("truetype-variations"),
+       url("/fonts/roobert/RoobertSemiMonoVF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter Tight";
+  src: url("/fonts/InterTight-VariableFont_wght.ttf") format("truetype-variations"),
+       url("/fonts/InterTight-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── NEUTRAL / OAT — every surface, body, and border ── */
+  --oat-100: #FEFDFB; /* page bg */
+  --oat-200: #F4F3F0; /* card / slab bg */
+  --oat-300: #D1CDC7; /* disabled surface / divider */
+  --oat-400: #7B7974; /* muted text */
+  --oat-500: #1B1A18; /* body text, ink */
+
+  --ink: #000000;
+  --grey-line: #E6E8EC;   /* UI 1px lines */
+  --grey-line-2: #EFF1F3; /* UI 1px lines, softer */
+  --white: #FFFFFF;
+
+  /* ── TANGERINE (primary accent / CTA) ── */
+  --tangerine-100: #FFF3ED;
+  --tangerine-200: #FCC9AB;
+  --tangerine-300: #FF7714;
+  --tangerine-350: #F06C0D; /* hover step used by the prototype */
+  --tangerine-400: #B53D0A;
+  --tangerine-500: #381005;
+  --tangerine-hover-bg: #FFF9F5; /* dropzone hover wash */
+
+  /* ── LIME ── */
+  --lime-100: #FCFEE2;
+  --lime-200: #EEF773;
+  --lime-300: #CBD810;
+  --lime-400: #808000;
+  --lime-450: #576200; /* ink used on lime pills in the prototype */
+  --lime-500: #102B03;
+
+  /* ── LEMON ── */
+  --lemon-100: #FEFAE8;
+  --lemon-200: #FBE189;
+  --lemon-300: #FDBE11;
+  --lemon-400: #9E5802;
+  --lemon-500: #372201;
+
+  /* ── POMEGRANATE ── */
+  --pom-100: #FFF1F2;
+  --pom-200: #FCBABE;
+  --pom-300: #FB4450;
+  --pom-400: #C22E3D;
+  --pom-500: #3A0308;
+
+  /* ── DRAGONFRUIT ── */
+  --dragon-100: #FFF0FA;
+  --dragon-200: #F8B9E4;
+  --dragon-300: #FF70D2;
+  --dragon-400: #CC089E;
+  --dragon-500: #46022F;
+
+  /* ── UBE ── */
+  --ube-100: #F5F3FF;
+  --ube-200: #C8BBFB;
+  --ube-300: #A17BF9;
+  --ube-400: #6D4CD6;
+  --ube-500: #160038;
+
+  /* ── BLUEBERRY ── */
+  --blueberry-100: #F0F8FF;
+  --blueberry-200: #BEDFFE;
+  --blueberry-300: #429EFF;
+  --blueberry-400: #395AFA;
+  --blueberry-500: #001433;
+
+  /* ── SLUSHIE ── */
+  --slushie-100: #F0FCFF;
+  --slushie-200: #AAEBFD;
+  --slushie-300: #3BD3FD;
+  --slushie-400: #008BAD;
+  --slushie-500: #002833;
+
+  /* ── SEMANTIC ROLES ── */
+  --bg: var(--oat-100);
+  --bg-raised: var(--oat-200);
+  --bg-inverse: var(--oat-500);
+  --fg: var(--oat-500);
+  --fg-muted: var(--oat-400);
+  --fg-subtle: var(--oat-300);
+  --fg-inverse: var(--oat-100);
+  --border: #EDEBE8;        /* card hairline on cream */
+  --border-strong: var(--oat-300);
+  --row-hover: #F9F8F5;
+  --danger: var(--pom-300);
+  --success: var(--lime-300);
+  --focus-ring: var(--tangerine-300);
+  --selection: var(--tangerine-200);
+
+  /* ── TYPOGRAPHY FAMILIES ── */
+  --font-display: "Roobert", "Roobert Uprights", "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-body: "Roobert", "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-mono: "Roobert SemiMono", "JetBrains Mono", ui-monospace, monospace;
+
+  /* ── RADIUS ── */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 999px;
+
+  /* ── SHADOW / ELEVATION ── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, .06), 0 2px 4px rgba(0, 0, 0, .04);
+  --shadow-lg: 0 24px 48px rgba(0, 0, 0, .10), 0 4px 8px rgba(0, 0, 0, .04);
+
+  /* ── MOTION — Clay is calm; this is the house curve ── */
+  --ease-house: cubic-bezier(0.2, 0, 0, 1);
+  --dur-micro: 120ms;
+  --dur-panel: 240ms;
+  --dur-page: 400ms;
+}
+
+/* ── Tailwind theme: expose the tokens as utilities (bg-oat-100,
+     text-tangerine-400, rounded-pill, shadow-md, font-mono, …) ── */
+@theme inline {
+  --color-oat-100: var(--oat-100);
+  --color-oat-200: var(--oat-200);
+  --color-oat-300: var(--oat-300);
+  --color-oat-400: var(--oat-400);
+  --color-oat-500: var(--oat-500);
+  --color-ink: var(--ink);
+  --color-line: var(--grey-line);
+  --color-line-soft: var(--grey-line-2);
+  --color-hairline: var(--border);
+  --color-row-hover: var(--row-hover);
+
+  --color-tangerine-100: var(--tangerine-100);
+  --color-tangerine-200: var(--tangerine-200);
+  --color-tangerine-300: var(--tangerine-300);
+  --color-tangerine-350: var(--tangerine-350);
+  --color-tangerine-400: var(--tangerine-400);
+  --color-tangerine-500: var(--tangerine-500);
+  --color-lime-100: var(--lime-100);
+  --color-lime-200: var(--lime-200);
+  --color-lime-300: var(--lime-300);
+  --color-lime-400: var(--lime-400);
+  --color-lime-450: var(--lime-450);
+  --color-lime-500: var(--lime-500);
+  --color-lemon-100: var(--lemon-100);
+  --color-lemon-200: var(--lemon-200);
+  --color-lemon-300: var(--lemon-300);
+  --color-lemon-400: var(--lemon-400);
+  --color-lemon-500: var(--lemon-500);
+  --color-pom-100: var(--pom-100);
+  --color-pom-200: var(--pom-200);
+  --color-pom-300: var(--pom-300);
+  --color-pom-400: var(--pom-400);
+  --color-pom-500: var(--pom-500);
+  --color-dragon-100: var(--dragon-100);
+  --color-dragon-300: var(--dragon-300);
+  --color-dragon-400: var(--dragon-400);
+  --color-ube-100: var(--ube-100);
+  --color-ube-300: var(--ube-300);
+  --color-ube-400: var(--ube-400);
+  --color-blueberry-100: var(--blueberry-100);
+  --color-blueberry-200: var(--blueberry-200);
+  --color-blueberry-300: var(--blueberry-300);
+  --color-blueberry-400: var(--blueberry-400);
+  --color-blueberry-500: var(--blueberry-500);
+  --color-slushie-100: var(--slushie-100);
+  --color-slushie-200: var(--slushie-200);
+  --color-slushie-300: var(--slushie-300);
+  --color-slushie-400: var(--slushie-400);
+  --color-slushie-500: var(--slushie-500);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --ease-house: var(--ease-house);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Base element styles — plain HTML looks on-brand by default
+   ════════════════════════════════════════════════════════════════════ */
+
+/* In @layer base so Tailwind utilities (a later layer) can override these. */
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    /* Clay body copy stylistic sets: SS02 ('g') + SS06 ('l') + SS10 ('?') */
+    font-feature-settings: "ss02" on, "ss06" on, "ss10" on;
+  }
+  a { color: var(--fg); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font-family: inherit; }
+
+  button:focus-visible,
+  a:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection { background: var(--selection); }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Keyframes — the three motions the product uses. House curve only.
+   ════════════════════════════════════════════════════════════════════ */
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes chunkPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Semantic typography — matches the Terra Figma type hierarchy.
+   Display headings get SS01 (single-storey 'a') + SS10 ('?') + SS11 ('t').
+   ════════════════════════════════════════════════════════════════════ */
+
+/* In @layer components so per-use utilities (e.g. text-[10.5px]) win. */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-feature-settings: "ss01" on, "ss10" on, "ss11" on;
+  }
+  .t-eyebrow-sm {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-variation-settings: "MONO" 0.5;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .t-mono-label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-variation-settings: "MONO" 0.5;
+    font-size: 11px;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .t-mono {
+    font-family: var(--font-mono);
+    font-variation-settings: "MONO" 0.5;
+  }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* Screen-reader-only (visually hidden) */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
