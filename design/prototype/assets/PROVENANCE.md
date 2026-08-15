@@ -1,17 +1,12 @@
 # Asset provenance
 
-The design project's asset transfer API caps single files at 256 KiB, which truncated three
-of the five PNGs. Resolution per file:
+All five PNGs are now the **byte-exact originals** from the design project, restored on
+15 Aug 2026 from the "Run monitor prototype review" handoff export and verified against the
+API pulls (each earlier truncated transfer is an exact byte-prefix of its restored file).
 
-| File | Status |
-| --- | --- |
-| `Check-A.png` | Original, complete (177,846 bytes). |
-| `Update-CRM.png` | Original, complete (186,145 bytes). |
-| `List-Building.png` | Reconstructed from the truncated original: 461/512 scanlines (90%) decoded cleanly; the missing bottom rows were transparent margin. Visually complete. |
-| `Clay_Arch_3D.png` | Substituted with the identical brand mark (`Clay_Logo_Icon.png`) from the Terra-derived asset set in `Manager-Forecasts-Weekly/public/brand/assets/` — same colorful 3D arch render, 1024×768. Displayed at 24×24, indistinguishable. |
-| `Clay_Logo_3D_Blk.png` | Substituted with the identical primary wordmark (`Clay_Logo_Primary_Blk.png`) from the same set — same "clay" wordmark + 3D arch, 3152×1006. Displayed at 44px height, indistinguishable. |
-
-To restore the byte-exact originals, re-export `assets/Clay_Arch_3D.png`,
-`assets/Clay_Logo_3D_Blk.png`, and `assets/List-Building.png` from the Claude Design project
-("Run monitor prototype review", `78e9368b-ab2d-445b-9cb4-8a5b8c82f680`) with a transfer
-method that isn't capped at 256 KiB, and overwrite the files here and in `public/`.
+History: the design project's file API caps single transfers at 256 KiB, which truncated
+`Clay_Arch_3D.png`, `Clay_Logo_3D_Blk.png`, and `List-Building.png` on first import. Interim
+stand-ins (a 90%-scanline reconstruction and two same-mark renders from another Terra-derived
+project) shipped briefly during Phase 1 and were replaced by the originals before Phase 2.
+`Check-A.png` and `Update-CRM.png` transferred complete on first import and were never
+substituted.
