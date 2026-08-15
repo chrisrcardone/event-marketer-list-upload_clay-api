@@ -31,7 +31,7 @@ plus a downloadable, verified result set.
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 1 | Terra design system, component primitives, `/dev/components` gallery, app shell | ✅ |
-| 2 | Supabase schema + RLS, Google OAuth, domain allowlist (4 layers), sign-in screens | — |
+| 2 | Supabase schema + RLS, Google OAuth, domain allowlist (4 layers), sign-in screens | ✅ |
 | 3 | Clay API client (`lib/clay/`), typed + Zod-validated, mocked test suite | — |
 | 4 | CSV pipeline, chunking, run orchestration, webhook + cron reconciliation | — |
 | 5 | All screens, real polling monitor, streamed exports, retry-failed | — |
@@ -39,18 +39,53 @@ plus a downloadable, verified result set.
 
 ## Quickstart
 
-> Fleshed out as the phases land. The target: clone → deployed in under ten minutes.
+> The target: clone → deployed in under ten minutes. Steps 5–7 land with later phases.
 
-1. `npm install`
-2. `cp .env.example .env.local` and fill it in (each key is documented inline)
-3. Fonts (see below) — optional but recommended
-4. `npm run dev` → [http://localhost:3000](http://localhost:3000). The component gallery is
-   at `/dev/components`.
+1. `npm install`, then `cp .env.example .env.local` (each key is documented inline).
+2. **Supabase** — create a project ([database.new](https://database.new)), then:
 
-Coming with later phases: Supabase project setup + migrations, Google OAuth redirect URIs,
-the one-time `clay webhooks create` step, the Routine contract a fork's Clay Routine must
-satisfy (`docs/routine-contract.md`), Vercel deploy notes, and the preview-deployment auth
-caveat.
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref <your-project-ref>
+   npx supabase db push        # applies supabase/migrations (schema, RLS, auth hook)
+   ```
+
+   Copy the project URL + publishable + secret keys into `.env.local`.
+3. **Google OAuth client** — [Google Cloud console → Credentials](https://console.cloud.google.com/apis/credentials)
+   → Create OAuth client ID → Web application:
+   - Authorized redirect URI: `https://<your-project-ref>.supabase.co/auth/v1/callback`
+   - Authorized JavaScript origins: your production URL and `http://localhost:3000`
+4. **Wire it together** (Google provider, before-user-created hook, redirect URLs, and the
+   Postgres copy of the domain allowlist) in one idempotent command:
+
+   ```bash
+   SUPABASE_PROJECT_REF=<ref> SITE_URL=https://<your-app>.vercel.app \
+   GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... ALLOWED_EMAIL_DOMAINS=yourco.com \
+   node scripts/configure-supabase-auth.mjs
+   ```
+
+5. `npm run dev` → [http://localhost:3000](http://localhost:3000). Sign in with a Google
+   account on an allowed domain. The component gallery is at `/dev/components`.
+
+Auth works on production and localhost only: Google OAuth redirect URIs are static, and
+Vercel preview URLs are not — don't expect sign-in to work on `*-git-*.vercel.app` previews
+unless you register a stable preview domain.
+
+### Access control (the four layers)
+
+`ALLOWED_EMAIL_DOMAINS` is enforced independently in four places — a bug in one layer
+leaves three standing. Matching is always **exact** on the substring after the **final** `@`,
+lowercased (`evilclay.com` never matches `clay.com`), and everything **fails closed**:
+empty allowlist ⇒ nobody signs in, and the UI says so.
+
+1. **Postgres auth hook** (`before_user_created_hook`, registered by the setup script):
+   disallowed domains are rejected before a user row is ever created.
+2. **`proxy.ts`** on every request: guests → sign-in; sessions with a disallowed domain →
+   the rejected screen (this also catches domains removed from the allowlist later).
+3. **`requireUser()`** in every session-required route handler re-derives the user from the
+   session cookie — never from a request body or query param.
+4. **Row Level Security** on every table: rows are scoped to `auth.uid()` *and* the JWT
+   email's domain must be in `public.allowed_email_domains`.
 
 ## Fonts
 

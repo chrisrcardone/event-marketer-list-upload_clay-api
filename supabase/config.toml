@@ -1,0 +1,41 @@
+# Supabase local-dev configuration (supabase start requires Docker).
+# The hosted project is configured by scripts/configure-supabase-auth.mjs.
+
+project_id = "event-lead-router"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+major_version = 17
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+
+# Layer 1 of the domain allowlist: reject disallowed domains before a user
+# row is ever created. The function ships in supabase/migrations.
+[auth.hook.before_user_created]
+enabled = true
+uri = "pg-functions://postgres/public/before_user_created_hook"
+
+# Google is the only sign-in method. Disabled by default locally so
+# `supabase start` works without credentials; flip to true and export
+# SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID / _SECRET to test the real flow
+# against the local stack.
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
