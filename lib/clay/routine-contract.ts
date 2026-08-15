@@ -22,6 +22,8 @@ export const failureReasonValues = [
   "no_match",
   "salesforce_write_failed",
   "missing_required_field",
+  "campaign_not_specified",
+  "campaign_not_found",
   "unknown",
 ] as const;
 export type FailureReason = (typeof failureReasonValues)[number];
@@ -50,6 +52,8 @@ export const failureReasonCopy: Record<FailureReason, string> = {
   no_match: "No enrichment match",
   salesforce_write_failed: "Salesforce write rejected",
   missing_required_field: "Missing a required field",
+  campaign_not_specified: "No campaign specified",
+  campaign_not_found: "Campaign not found in Salesforce",
   unknown: "Failed for an unknown reason",
 };
 
