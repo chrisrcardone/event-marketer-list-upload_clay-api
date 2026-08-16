@@ -387,35 +387,64 @@ async function pollBatch(db: Db, run: RunRowDb & { id: string; user_id: string }
 /* ── shared persistence ────────────────────────────────────────────── */
 
 async function persistItems(db: Db, runId: string, userId: string, items: RunResultItem[]) {
+  // CRITICAL: PostgREST bulk upserts use the UNION of keys across the batch
+  // and write NULL for keys a row omits. Mixed-shape rows in one batch
+  // therefore WIPE existing columns. Every batch below is uniform-keyed:
+  //  (a) outcome-only for items with no routine output (kind-1 failures) —
+  //      never touches the row's identity fields;
+  //  (b) full updates for items with output, whose fields echo the merged
+  //      person (input-or-better) from the routine contract.
   for (let i = 0; i < items.length; i += 200) {
     const slice = items.slice(i, i + 200);
-    const updates = slice.map((item) => {
+
+    const base = (item: RunResultItem, outcome: ReturnType<typeof classifyResultItem>) => ({
+      run_id: runId,
+      user_id: userId,
+      item_id: item.id,
+      original_row_number: Number(item.id.replace(/^r/, "")) || 0,
+      status: outcome.status,
+      routine_status: outcome.routineStatus,
+      failure_reason: outcome.reason || null,
+      payload: outcome.output ?? (item.error ? { error: item.error.message } : null),
+    });
+
+    const outcomeOnly: Array<Record<string, unknown>> = [];
+    const withOutput: Array<Record<string, unknown>> = [];
+    for (const item of slice) {
       const outcome = classifyResultItem(item);
       const output = outcome.output;
-      const first = (output?.first_name ?? "") as string;
-      const last = (output?.last_name ?? "") as string;
-      return {
-        run_id: runId,
-        user_id: userId,
-        item_id: item.id,
-        original_row_number: Number(item.id.replace(/^r/, "")) || 0,
-        status: outcome.status,
-        routine_status: outcome.routineStatus,
-        failure_reason: outcome.reason || null,
-        ...(first || last ? { name: `${first} ${last}`.trim() } : {}),
-        ...(output?.email ? { email: output.email as string } : {}),
-        ...(output?.phone ? { phone: output.phone as string } : {}),
-        ...(output?.title ? { title: output.title as string } : {}),
-        ...(output?.company_name ? { company: output.company_name as string } : {}),
-        ...(output?.company_domain ? { company_domain: output.company_domain as string } : {}),
-        ...(output?.linkedin_url ? { linkedin_url: output.linkedin_url as string } : {}),
-        salesforce_url: contactLink(output?.salesforce_contact_id as string | undefined) || null,
-        payload: output ?? (item.error ? { error: item.error.message } : null),
-      };
-    });
-    // Idempotent on (run_id, item_id): webhook + poller can both deliver.
-    const { error } = await db.from("run_rows").upsert(updates, { onConflict: "run_id,item_id" });
-    if (error) logEvent("rows.upsert_error", { runId, message: error.message });
+      if (!output) {
+        outcomeOnly.push(base(item, outcome));
+        continue;
+      }
+      const first = (output.first_name ?? "") as string;
+      const last = (output.last_name ?? "") as string;
+      const name = `${first} ${last}`.trim();
+      withOutput.push({
+        ...base(item, outcome),
+        ...(name ? { name } : {}),
+        ...(output.email ? { email: output.email as string } : {}),
+        ...(output.phone ? { phone: output.phone as string } : {}),
+        ...(output.title ? { title: output.title as string } : {}),
+        ...(output.company_name ? { company: output.company_name as string } : {}),
+        ...(output.company_domain ? { company_domain: output.company_domain as string } : {}),
+        ...(output.linkedin_url ? { linkedin_url: output.linkedin_url as string } : {}),
+        salesforce_url: contactLink(output.salesforce_contact_id as string | undefined) || null,
+      });
+    }
+
+    if (outcomeOnly.length > 0) {
+      const { error } = await db.from("run_rows").upsert(outcomeOnly, { onConflict: "run_id,item_id" });
+      if (error) logEvent("rows.upsert_error", { runId, message: error.message });
+    }
+    // Rows with output still vary per-field (email found for some, not
+    // others) — upsert them ONE AT A TIME so no row inherits another row's
+    // key union. Batch size here is ≤100 per chunk; the extra round-trips
+    // are cheap next to the enrichment they follow.
+    for (const row of withOutput) {
+      const { error } = await db.from("run_rows").upsert(row, { onConflict: "run_id,item_id" });
+      if (error) logEvent("rows.upsert_error", { runId, message: error.message });
+    }
   }
 }
 
