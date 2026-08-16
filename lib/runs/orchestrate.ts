@@ -174,9 +174,32 @@ async function pollInline(db: Db, run: RunRowDb & { id: string; user_id: string 
   // duplicated), so a re-run converges. Capped at MAX_CHUNK_ATTEMPTS.
   for (const chunk of chunks) {
     if (chunk.status !== "running" && chunk.status !== "starting") continue;
-    if ((chunk.attempt ?? 1) >= MAX_CHUNK_ATTEMPTS) continue;
     const lastTouch = new Date(chunk.updated_at ?? chunk.created_at).getTime();
     if (Date.now() - lastTouch <= CHUNK_STUCK_MS()) continue;
+
+    if ((chunk.attempt ?? 1) >= MAX_CHUNK_ATTEMPTS) {
+      // Attempts exhausted and still hung: a poison item must never hold a
+      // run open forever. Fail the chunk honestly — its unpersisted rows
+      // become readable failures and retry-failed can take another swing.
+      await db
+        .from("run_chunks")
+        .update({
+          status: "failed",
+          error: { message: `No progress after ${MAX_CHUNK_ATTEMPTS} attempts — presumed hung in Clay.` },
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", chunk.id);
+      await db
+        .from("run_rows")
+        .update({ status: "failed", failure_reason: "Enrichment hung inside Clay — retried 3 times" })
+        .eq("run_id", runId)
+        .eq("chunk_index", chunk.chunk_index)
+        .eq("status", "pending");
+      chunk.status = "failed";
+      logEvent("chunk.exhausted", { runId, chunk: chunk.chunk_index });
+      continue;
+    }
+
     const nextAttempt = ((chunk.attempt as number) ?? 1) + 1;
     await db
       .from("run_chunks")
