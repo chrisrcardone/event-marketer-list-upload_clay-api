@@ -22,7 +22,7 @@ export async function POST(
 
   const { data: failed } = await db
     .from("run_rows")
-    .select("original_row_number,name,email,phone,company,title,linkedin_url")
+    .select("original_row_number,name,email,phone,company,company_domain,title,linkedin_url")
     .eq("run_id", id)
     .eq("status", "failed")
     .order("original_row_number");
@@ -40,6 +40,7 @@ export async function POST(
       email: r.email ?? "",
       phone: r.phone ?? "",
       company: r.company ?? "",
+      company_domain: r.company_domain ?? "",
       title: r.title ?? "",
       linkedin_url: r.linkedin_url ?? "",
     };

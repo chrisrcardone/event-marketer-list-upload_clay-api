@@ -16,6 +16,7 @@ export interface LeadRow {
   email: string;
   phone: string;
   company: string;
+  company_domain: string;
   title: string;
   linkedin_url: string;
 }
@@ -38,6 +39,7 @@ export function extractLeads(
     email: get(row, "email").toLowerCase(),
     phone: get(row, "phone"),
     company: get(row, "company"),
+    company_domain: get(row, "company_domain").toLowerCase(),
     title: get(row, "title"),
     linkedin_url: get(row, "linkedin_url"),
   }));

@@ -37,6 +37,7 @@ deep links.
 | `email` | Lowercased; primary contact-lookup key; skips the email finder when present |
 | `phone` | Skips the phone finder when present |
 | `company` | Company name |
+| `company_domain` | Company website domain (e.g. `acme.com`; URLs are cleaned to a bare domain). Strongly improves match rates: it feeds the LinkedIn finder, company enrichment, and the email finder directly |
 | `title` | Job title |
 | `linkedin_url` | Skips the LinkedIn finder when present |
 | `campaign_id` | Salesforce Campaign record id — preferred campaign reference |
@@ -47,6 +48,10 @@ deep links.
 
 At least one identity — `email`, or `first_name`+`last_name`+`company`, or `linkedin_url` —
 must be present for a useful outcome (the app enforces this pre-flight).
+
+The LinkedIn finder requires a full name **plus a company domain or a job title**; the
+workflow only invokes it when those inputs exist (rows without them proceed unenriched
+rather than failing the run).
 
 ## Output (per item `result` object)
 

@@ -12,6 +12,7 @@ const lead = (over: Partial<LeadRow>): LeadRow => ({
   email: "",
   phone: "",
   company: "",
+  company_domain: "",
   title: "",
   linkedin_url: "",
   ...over,
@@ -49,16 +50,22 @@ describe("header synonyms", () => {
     expect(normalizeHeader("E-mail Address")).toBe("emailaddress");
   });
   it("maps common badge-scan headers", () => {
-    const map = autoMapHeaders(["First Name", "LAST_NAME", "Work Email", "Company Name", "Job Title", "LinkedIn Profile", "Mobile Phone"]);
+    const map = autoMapHeaders(["First Name", "LAST_NAME", "Work Email", "Company Name", "Company Domain", "Job Title", "LinkedIn Profile", "Mobile Phone"]);
     expect(map).toEqual({
       first_name: "First Name",
       last_name: "LAST_NAME",
       email: "Work Email",
       company: "Company Name",
+      company_domain: "Company Domain",
       title: "Job Title",
       linkedin_url: "LinkedIn Profile",
       phone: "Mobile Phone",
     });
+  });
+
+  it("maps website/domain headers to company_domain", () => {
+    expect(autoMapHeaders(["Website"]).company_domain).toBe("Website");
+    expect(autoMapHeaders(["domain"]).company_domain).toBe("domain");
   });
   it("never maps one header to two fields", () => {
     const map = autoMapHeaders(["email"]);

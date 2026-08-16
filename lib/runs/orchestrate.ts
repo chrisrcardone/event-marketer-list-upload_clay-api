@@ -86,6 +86,7 @@ export async function createRun(args: CreateRunArgs): Promise<{ runId: string } 
     email: lead.email,
     phone: lead.phone,
     company: lead.company,
+    company_domain: lead.company_domain,
     title: lead.title,
     linkedin_url: lead.linkedin_url,
     status: "pending" as const,
@@ -239,7 +240,7 @@ async function pollInline(db: Db, run: RunRowDb & { id: string; user_id: string 
 async function chunkItems(db: Db, run: RunRowDb & { id: string }, chunkIndex: number): Promise<RoutineItem[] | null> {
   const { data: rows } = await db
     .from("run_rows")
-    .select("item_id, original_row_number, name, email, phone, company, title, linkedin_url")
+    .select("item_id, original_row_number, name, email, phone, company, company_domain, title, linkedin_url")
     .eq("run_id", run.id)
     .eq("chunk_index", chunkIndex)
     .order("original_row_number");
@@ -258,6 +259,7 @@ function toRoutineItem(r: Record<string, unknown>, run: RunRowDb): RoutineItem {
       email: String(r.email ?? ""),
       phone: String(r.phone ?? ""),
       company: String(r.company ?? ""),
+      company_domain: String(r.company_domain ?? ""),
       title: String(r.title ?? ""),
       linkedin_url: String(r.linkedin_url ?? ""),
       campaign_id: String(run.campaign_id ?? ""),
@@ -358,6 +360,7 @@ async function persistItems(db: Db, runId: string, userId: string, items: RunRes
         ...(output?.phone ? { phone: output.phone as string } : {}),
         ...(output?.title ? { title: output.title as string } : {}),
         ...(output?.company_name ? { company: output.company_name as string } : {}),
+        ...(output?.company_domain ? { company_domain: output.company_domain as string } : {}),
         ...(output?.linkedin_url ? { linkedin_url: output.linkedin_url as string } : {}),
         salesforce_url: contactLink(output?.salesforce_contact_id as string | undefined) || null,
         payload: output ?? (item.error ? { error: item.error.message } : null),

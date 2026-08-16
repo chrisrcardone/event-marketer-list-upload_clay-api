@@ -29,13 +29,15 @@ export async function GET(
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       controller.enqueue(
-        encoder.encode("csv_line,name,email,phone,company,title,linkedin_url,status,failure_reason,salesforce_url\n"),
+        encoder.encode(
+          "csv_line,name,email,phone,company,company_domain,title,linkedin_url,status,failure_reason,salesforce_url\n",
+        ),
       );
       const pageSize = 1000;
       for (let offset = 0; ; offset += pageSize) {
         let query = supabase
           .from("run_rows")
-          .select("original_row_number,name,email,phone,company,title,linkedin_url,status,failure_reason,salesforce_url")
+          .select("original_row_number,name,email,phone,company,company_domain,title,linkedin_url,status,failure_reason,salesforce_url")
           .eq("run_id", id)
           .neq("status", "pending")
           .order("original_row_number")
@@ -51,6 +53,7 @@ export async function GET(
               csvEscape(r.email ?? ""),
               csvEscape(r.phone ?? ""),
               csvEscape(r.company ?? ""),
+              csvEscape(r.company_domain ?? ""),
               csvEscape(r.title ?? ""),
               csvEscape(r.linkedin_url ?? ""),
               r.status,

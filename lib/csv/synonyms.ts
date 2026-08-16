@@ -10,6 +10,7 @@ export type MappableField =
   | "email"
   | "phone"
   | "company"
+  | "company_domain"
   | "title"
   | "linkedin_url";
 
@@ -19,6 +20,7 @@ export const FIELD_LABELS: Record<MappableField, string> = {
   email: "Email",
   phone: "Phone",
   company: "Company",
+  company_domain: "Company domain",
   title: "Title",
   linkedin_url: "LinkedIn URL",
 };
@@ -39,6 +41,7 @@ export const HEADER_SYNONYMS: Record<MappableField, string[]> = {
   email: ["email", "emailaddress", "workemail", "businessemail", "mail", "emailid"],
   phone: ["phone", "phonenumber", "mobile", "mobilephone", "mobilenumber", "cell", "cellphone", "telephone", "tel", "workphone", "directdial"],
   company: ["company", "companyname", "organization", "organisation", "org", "employer", "account", "accountname", "business"],
+  company_domain: ["companydomain", "domain", "website", "companywebsite", "companyurl", "webdomain", "site", "web"],
   title: ["title", "jobtitle", "role", "position", "designation", "jobrole"],
   linkedin_url: ["linkedin", "linkedinurl", "linkedinprofile", "linkedinlink", "liurl", "linkedinprofileurl"],
 };
