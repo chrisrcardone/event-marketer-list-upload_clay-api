@@ -22,7 +22,7 @@ export async function POST(
 
   const { data: failed } = await db
     .from("run_rows")
-    .select("original_row_number,name,email,phone,company,company_domain,title,linkedin_url")
+    .select("original_row_number,name,email,phone,company,company_domain,title,linkedin_url,payload")
     .eq("run_id", id)
     .eq("status", "failed")
     .order("original_row_number");
@@ -30,9 +30,19 @@ export async function POST(
     return NextResponse.json({ error: "no failed rows to retry" }, { status: 400 });
   }
 
+  // A row that failed on a DETERMINISTIC enrichment-provider rejection
+  // (dead domain, unparseable name, blocked data) will fail the same way
+  // every time. On retry, strip the finder's inputs so the workflow skips
+  // enrichment and the person still lands in Salesforce, honestly
+  // unenriched — retrying converges instead of looping.
+  const DETERMINISTIC_FINDER_REJECTION =
+    /Invalid DNS for domain|couldn't extract a first name|SUCCESS_BLOCKED_DATA/i;
+
   const leads: LeadRow[] = failed.map((r) => {
     const name = String(r.name ?? "").trim();
     const [first, ...rest] = name.split(/\s+/);
+    const previousError = String((r.payload as { error?: string } | null)?.error ?? "");
+    const skipEnrichment = DETERMINISTIC_FINDER_REJECTION.test(previousError);
     return {
       line: r.original_row_number,
       first_name: first ?? "",
@@ -40,8 +50,8 @@ export async function POST(
       email: r.email ?? "",
       phone: r.phone ?? "",
       company: r.company ?? "",
-      company_domain: r.company_domain ?? "",
-      title: r.title ?? "",
+      company_domain: skipEnrichment ? "" : (r.company_domain ?? ""),
+      title: skipEnrichment ? "" : (r.title ?? ""),
       linkedin_url: r.linkedin_url ?? "",
     };
   });
