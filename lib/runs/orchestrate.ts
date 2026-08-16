@@ -15,6 +15,8 @@ import { logEvent } from "@/lib/log";
 const POLL_INTERVAL_MS = () => Number(process.env.POLL_INTERVAL_MS ?? 3000) || 3000;
 const MAX_CONCURRENT_CHUNKS = () => Number(process.env.MAX_CONCURRENT_CHUNKS ?? 5) || 5;
 const STALL_MS = () => (Number(process.env.STALL_THRESHOLD_MINUTES ?? 10) || 10) * 60_000;
+const CHUNK_STUCK_MS = () => (Number(process.env.CHUNK_STUCK_MINUTES ?? 8) || 8) * 60_000;
+const MAX_CHUNK_ATTEMPTS = 3;
 
 type Db = SupabaseClient;
 
@@ -163,6 +165,28 @@ async function pollInline(db: Db, run: RunRowDb & { id: string; user_id: string 
     .eq("run_id", runId)
     .order("chunk_index");
   if (!chunks) return;
+
+  // Extreme resilience: a chunk whose counter hasn't moved for
+  // CHUNK_STUCK_MINUTES is presumed hung inside Clay (a long-tail item that
+  // never reaches terminal holds the whole chunk hostage, since row data
+  // only exists at terminal). Re-queue it for a fresh Clay run — Salesforce
+  // writes are idempotent (existing contacts/members are found, not
+  // duplicated), so a re-run converges. Capped at MAX_CHUNK_ATTEMPTS.
+  for (const chunk of chunks) {
+    if (chunk.status !== "running" && chunk.status !== "starting") continue;
+    if ((chunk.attempt ?? 1) >= MAX_CHUNK_ATTEMPTS) continue;
+    const lastTouch = new Date(chunk.updated_at ?? chunk.created_at).getTime();
+    if (Date.now() - lastTouch <= CHUNK_STUCK_MS()) continue;
+    const nextAttempt = ((chunk.attempt as number) ?? 1) + 1;
+    await db
+      .from("run_chunks")
+      .update({ status: "queued", clay_run_id: null, finished_items: 0, attempt: nextAttempt })
+      .eq("id", chunk.id);
+    chunk.status = "queued";
+    chunk.clay_run_id = null;
+    chunk.attempt = nextAttempt;
+    logEvent("chunk.auto_requeued", { runId, chunk: chunk.chunk_index, attempt: nextAttempt });
+  }
 
   const active = chunks.filter((c) => c.status === "starting" || c.status === "running");
   const queued = chunks.filter((c) => c.status === "queued");
