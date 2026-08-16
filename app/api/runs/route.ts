@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireUserForApi } from "@/lib/auth/session";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { parseCsv } from "@/lib/csv/parse";
+import { stripDeadDomains } from "@/lib/csv/dns-check";
 import { extractLeads, preflight } from "@/lib/csv/validate";
 import { createRun, pollStep } from "@/lib/runs/orchestrate";
 import { planConfigFromEnv } from "@/lib/runs/plan";
@@ -68,6 +69,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "no runnable rows after pre-flight" }, { status: 400 });
   }
 
+  // Dead domains deterministically fail enrichment — strip them here so
+  // those rows run unenriched instead of failing (their company name stays).
+  const { leads: cleanLeads, deadDomains } = await stripDeadDomains(flight.clean);
+  if (deadDomains.length > 0) logEvent("run.dead_domains_stripped", { count: deadDomains.length });
+
   const created = await createRun({
     userId: user.id,
     userEmail: user.email,
@@ -85,13 +91,13 @@ export async function POST(request: Request) {
     },
     dropChoices: body.dropChoices,
     columnMapping: body.columnMapping,
-    leads: flight.clean,
+    leads: cleanLeads,
   });
   if ("error" in created) return NextResponse.json({ error: created.error }, { status: 500 });
 
   // Kick the first unit of work now so chunks start without waiting a poll.
   await pollStep(user.id, created.runId, true);
-  logEvent("run.started", { runId: created.runId, rows: flight.clean.length });
+  logEvent("run.started", { runId: created.runId, rows: cleanLeads.length });
   return NextResponse.json({ runId: created.runId });
 }
 
